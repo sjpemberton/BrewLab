@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "BrewLab", "BrewLab\BrewLab\BrewLab.fsproj", "{1EA951C7-A82E-468B-A6D4-DDEE892A9A96}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{23E14FA2-1699-4858-939C-E2C7D49BF385}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1EA951C7-A82E-468B-A6D4-DDEE892A9A96}.Debug|x86.ActiveCfg = Debug|x86
+		{1EA951C7-A82E-468B-A6D4-DDEE892A9A96}.Debug|x86.Build.0 = Debug|x86
+		{1EA951C7-A82E-468B-A6D4-DDEE892A9A96}.Release|x86.ActiveCfg = Release|x86
+		{1EA951C7-A82E-468B-A6D4-DDEE892A9A96}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
