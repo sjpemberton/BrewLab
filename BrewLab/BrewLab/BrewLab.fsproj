@@ -51,12 +51,14 @@
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
+    <Compile Include="RecipeViewModel.fs" />
+    <None Include="RecipeView.xaml" />
+    <Compile Include="RecipeView.xaml.fs" />
     <Resource Include="MainWindow.xaml" />
     <Compile Include="MainWindow.xaml.fs" />
     <Resource Include="App.xaml" />
     <Compile Include="App.fs" />
     <Content Include="App.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Accessibility" />

@@ -3,3 +3,4 @@ source https://nuget.org/api/v2
 // NuGet packages
 nuget NUnit ~> 2.6.3
 nuget FAKE ~> 3.4
+nuget FsXaml.Wpf ~> 0.9.9
