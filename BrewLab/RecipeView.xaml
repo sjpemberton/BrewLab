@@ -6,11 +6,10 @@
         xmlns:viewModels="clr-namespace:ViewModels;assembly=BrewLab"         
         MinHeight="220" MinWidth="300" Height="Auto"
         fsxaml:ViewController.Custom="{x:Type local:RecipeViewController}">
-    <UserControl.Resources>
-    </UserControl.Resources>
     <UserControl.DataContext>
         <viewModels:RecipeViewModel/>
     </UserControl.DataContext>
-    <Grid >
+    <Grid>
+        <TextBox Name="RecipeName" Text="Enter Recipe Name Here..." />
     </Grid>
 </UserControl>

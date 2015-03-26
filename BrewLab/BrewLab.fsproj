@@ -52,8 +52,8 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <Compile Include="RecipeViewModel.fs" />
-    <None Include="RecipeView.xaml" />
     <Compile Include="RecipeView.xaml.fs" />
+    <Resource Include="RecipeView.xaml" />
     <Resource Include="MainWindow.xaml" />
     <Compile Include="MainWindow.xaml.fs" />
     <Resource Include="App.xaml" />
