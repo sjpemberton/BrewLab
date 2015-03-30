@@ -52,7 +52,7 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <Compile Include="Ingredients.fs" />
-    <Compile Include="Ingredient.fs" />
+    <Compile Include="GrainViewModel.fs" />
     <Compile Include="RecipeViewModel.fs" />
     <Compile Include="RecipeView.xaml.fs" />
     <Resource Include="RecipeView.xaml" />
@@ -61,6 +61,7 @@
     <Resource Include="App.xaml" />
     <Compile Include="App.fs" />
     <Content Include="App.config" />
+    <Compile Include="Recipe.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Accessibility" />
