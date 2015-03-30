@@ -7,7 +7,7 @@ open FSharp.ViewModule.Validation
 type GrainViewModel(name:string, potential:float<pgp>, colour:float<EBC>) as this = 
     inherit ViewModelBase()
 
-    let weight = this.Factory.Backing(<@ this.Weight @>, 0.001<g>, greaterThan (fun a -> 0.0<g>))
+    let weight = this.Factory.Backing(<@ this.Weight @>, 1.0<g>, greaterThan (fun a -> 0.0<g>))
     
     member val Name = name
     member x.Weight with get() = weight.Value and set(value) = weight.Value <- value
