@@ -5,21 +5,30 @@ open Caculations
 open Conversions
 open Microsoft.FSharp.Data.UnitSystems.SI.UnitSymbols
 
-module Recipe =
-
-    type Recipe = {
-        Name: string
-        Grain: grain list
-        Hops: hop list
-        Adjuncts: adjunct list
-        Yeast: yeast
-        Efficiency: float<percentage>
-        BoilLength:float//In minutes
-        MashLength:float//In minutes
-        Volume:float<L>
-    }
-
+module Recipe = 
+    type _recipe<[<Measure>] 'w, [<Measure>] 'v, [<Measure>] 't> = 
+        { Name : string
+          Grain : grain<'w> list
+          Hops : hop<'w> list
+          Adjuncts : adjunct<'w> list
+          Yeast : yeast<'t>
+          Efficiency : float<percentage>
+          BoilLength : float //In minutes
+          MashLength : float //In minutes
+          Volume : float<'v>
+          Style : string }
+    
+    type Recipe = 
+        | Metric of _recipe<kg, L, degC>
+        | Imperial of _recipe<lb, usGal, degF>
+    
     let EstimatedOriginalGravity recipe = 
-        recipe.Grain
-        |> List.map (fun g -> {Weight = (g.Weight / 1000.0<g> * 1.0<kg>) |> ToPound; Potential = g.Potential |> ToPGP})
-        |> EstimateGravityFromGrainBill (recipe.Volume |> ToUsGallons) recipe.Efficiency
+        match recipe with
+        | Metric mr -> 
+            mr.Grain
+            |> List.map (fun g -> (g.Weight |> ToPound, g.Potential |> ToPGP))
+            |> EstimateGravityFromGrainBill (mr.Volume |> ToUsGallons) mr.Efficiency
+        | Imperial ir -> 
+            ir.Grain 
+            |> List.map (fun g -> (g.Weight, g.Potential))
+            |> EstimateGravityFromGrainBill ir.Volume ir.Efficiency

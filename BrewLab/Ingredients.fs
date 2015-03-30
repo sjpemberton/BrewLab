@@ -1,6 +1,7 @@
 ﻿namespace Models
 
 open Units
+open Caculations
 
 type HopType =
 |Pellet
@@ -13,13 +14,13 @@ type HopAddition =
 |Aroma
 |DryHop
 
-type hop = {Name:string; Weight:float<g>; Alpha:float<percentage>; Time:float; Type:HopType; }
-type adjunct = {Name:string; Weight:float<g>; Description:string }
-type grain = {Name:string; Weight:float<g>; Potential:float<pgpkg>; Colour:float<EBC>}
-type yeast = {Name:string; Attenuation:float<percentage>; TempRange: float<degC>*float<degC> }
+type hop<[<Measure>] 'w> = {Name:string; Weight:float<'w>; Alpha:float<percentage>; Time:float; Type:HopType; }
+type adjunct<[<Measure>] 'w> = {Name:string; Weight:float<'w>; Description:string }
+type grain<[<Measure>] 'w> = {Name:string; Weight:float<'w>; Potential:float<gp/'w>; Colour:float<EBC>}
+type yeast<[<Measure>] 't> = {Name:string; Attenuation:float<percentage>; TempRange: float<'t>*float<'t> }
 type water = {Name:string;} //chemical profile
 
-type Ingredient =
-| Hop of hop
-| Adjunct of adjunct
-| Grain of grain
+//type Ingredient =
+//| Hop of hop
+//| Adjunct of adjunct
+//| Grain of grain
