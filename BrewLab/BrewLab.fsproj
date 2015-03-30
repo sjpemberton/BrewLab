@@ -51,9 +51,11 @@
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
+    <Compile Include="Ingredients.fs" />
+    <Compile Include="Ingredient.fs" />
     <Compile Include="RecipeViewModel.fs" />
-    <None Include="RecipeView.xaml" />
     <Compile Include="RecipeView.xaml.fs" />
+    <Resource Include="RecipeView.xaml" />
     <Resource Include="MainWindow.xaml" />
     <Compile Include="MainWindow.xaml.fs" />
     <Resource Include="App.xaml" />
@@ -62,6 +64,9 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Accessibility" />
+    <Reference Include="BrewCalculations">
+      <HintPath>..\packages\BrewCalc\BrewCalculations.dll</HintPath>
+    </Reference>
     <Reference Include="FSharp.ViewModule.Core.Wpf">
       <HintPath>..\..\packages\FSharp.ViewModule.Core.0.9.9.1\lib\net45\FSharp.ViewModule.Core.Wpf.dll</HintPath>
       <Private>True</Private>

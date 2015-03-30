@@ -6,11 +6,24 @@
         xmlns:viewModels="clr-namespace:ViewModels;assembly=BrewLab"         
         MinHeight="220" MinWidth="300" Height="Auto"
         fsxaml:ViewController.Custom="{x:Type local:RecipeViewController}">
-    <UserControl.Resources>
-    </UserControl.Resources>
     <UserControl.DataContext>
         <viewModels:RecipeViewModel/>
     </UserControl.DataContext>
-    <Grid >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="32" />
+        </Grid.RowDefinitions>
+        <TextBox Name="RecipeName" Text="Enter Recipe Name Here..." Grid.Row="0"  FontSize="16"/>
+
+        <DataGrid Name="GrainBill" Grid.Row="1" Margin="3" ItemsSource="{Binding Grain}" AutoGenerateColumns="false">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Name}" Header="Name" Width="*"/>
+                <DataGridTextColumn Binding="{Binding Weight, Mode=TwoWay}" Header="Weight" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Button Grid.Row="2" FontSize="16" Command="{Binding AddMaltCommand}" >Add Grain</Button>
     </Grid>
 </UserControl>
