@@ -1,7 +1,7 @@
 ﻿namespace Models
 
 open Units
-open Caculations
+open Calculations
 
 type HopType =
 |Pellet
