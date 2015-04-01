@@ -11,6 +11,7 @@ open System.ComponentModel
 
 type RecipeViewModel() as this = 
     inherit ViewModelBase()
+    
     let mutable recipe = 
         { Name = ""
           Grain = List.Empty
@@ -24,21 +25,23 @@ type RecipeViewModel() as this =
           Style = ""
           EstimatedOriginalGravity = 0.0<sg> }
 
-    //let grain = ObservableCollection<GrainViewModel>()
-
-    let mutable test = 
-        [| 
-            GrainViewModel({Name = "Maris Otter"; Weight = 0.001<kg>; Potential = 37.0<pgpkg>; Colour = 4.0<EBC>} )
-            GrainViewModel({Name = "Maris Otter2"; Weight = 0.001<kg>; Potential = 37.0<pgpkg>; Colour = 4.0<EBC>})
-        |]
+    let grain = ObservableCollection<GrainViewModel>()
 
     let addMaltCommand = 
-        this.Factory.CommandSync
-            (fun param -> 
-                 recipe <- AddGrain recipe {Name = "Maris Otter"; Weight = 0.001<kg>; Potential = 37.0<pgpkg>; Colour = 4.0<EBC>}
-                 this.Grain.Refresh()
-                 this.RaisePropertyChanged "Grain")
+        this.Factory.CommandSync(fun param -> 
+            let g = { Name = "Maris Otter"
+                      Weight = 0.001<kg>
+                      Potential = 37.0<pgpkg>
+                      Colour = 4.0<EBC> }
+            recipe <- AddGrain recipe g
+            this.Grain.Add(GrainViewModel(g)))
+                                        
 
-    
     member x.AddMaltCommand = addMaltCommand
-    member x.Grain with get():ICollectionView = CollectionViewSource.GetDefaultView( recipe.Grain |> List.map(fun g -> GrainViewModel(g)))
+    member x.Grain:ObservableCollection<GrainViewModel> = grain
+
+    member x.UpdateModel =
+        let update = { recipe with Name = ""
+                                   Grain = grain |> Seq.map (fun g -> g.UpdateModel()) |> Seq.toList}
+        recipe <- update
+        update
