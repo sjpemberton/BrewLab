@@ -6,17 +6,13 @@ open FSharp.ViewModule
 open FSharp.ViewModule.Validation
 open Microsoft.FSharp.Data.UnitSystems.SI.UnitSymbols
 
-type GrainViewModel(grain : grain<kg>) as this = 
-    inherit ViewModelBase()
+type GrainViewModel(grain) as this = 
+    inherit LabViewModel<grain<kg>>(grain, this.UpdateModel)
 
-    ///Mutable cache of the current model snapshot - used for dirty checking etc
-    let mutable _grain = grain
     let weight = this.Factory.Backing(<@ this.Weight @>, 0.001<kg>, greaterThan (fun a -> 0.000<kg>))
 
-    member x.UpdateModel() = 
-        let update = { _grain with Weight = weight.Value }
-        _grain <- update
-        update
+    member private x.UpdateModel(model) = 
+        { model with Weight = weight.Value }
 
     member val Name = grain.Name
     member x.Potential : float<pgpkg> = grain.Potential
