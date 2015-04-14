@@ -6,9 +6,7 @@
         xmlns:viewModels="clr-namespace:ViewModels;assembly=BrewLab"         
         MinHeight="220" MinWidth="300" Height="Auto"
         fsxaml:ViewController.Custom="{x:Type local:RecipeViewController}">
-    <UserControl.DataContext>
-        <viewModels:RecipeViewModel/>
-    </UserControl.DataContext>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="32"/>

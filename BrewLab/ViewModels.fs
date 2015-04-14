@@ -3,13 +3,15 @@
 open FSharp.ViewModule
 
 [<AbstractClass>]
-type LabViewModel<'t>(model:'t, updateModel : 't -> 't) as this = 
+type LabViewModel<'t>(model:'t) as this = 
     inherit ViewModelBase()
 
     ///Mutable cache of the current model snapshot - used for dirty checking etc
     let mutable model = model
 
+    abstract member UpdateModel: 't ->'t
+
     member x.GetModel() = 
-        let newModel = updateModel model
+        let newModel = this.UpdateModel model
         model <- newModel
         newModel

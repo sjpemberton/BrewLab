@@ -10,25 +10,11 @@ open Microsoft.FSharp.Data.UnitSystems.SI.UnitSymbols
 open System.ComponentModel
 
 type RecipeViewModel(recipe) as this = 
-    inherit LabViewModel<_recipe<kg,L,degC>>(recipe, this.UpdateModel)
-    
-    //let mutable recipe = recipe
-//        { Name = ""
-//          Grain = List.Empty
-//          Hops = List.Empty
-//          Adjuncts = List.Empty
-//          Yeast = None
-//          Efficiency = 75.0<percentage>
-//          BoilLength = 60.0<minute>
-//          MashLength = 60.0<minute>
-//          Volume = 21.0<L>
-//          Style = ""
-//          EstimatedOriginalGravity = 0.0<sg> }
+    inherit LabViewModel<_recipe<kg,L,degC>>(recipe)
 
     let grain = ObservableCollection<GrainViewModel>()
 
-    let RefreshParts = 
-        this.GetModel() |> ignore
+    
 
     let addMaltCommand = 
         this.Factory.CommandSync(fun param -> 
@@ -38,15 +24,18 @@ type RecipeViewModel(recipe) as this =
                       Colour = 4.0<EBC> }
             //recipe <- AddGrain recipe g
             this.Grain.Add(GrainViewModel(g))
-            RefreshParts)
+            this.RefreshParts)
                                         
 
     member x.AddMaltCommand = addMaltCommand
     member x.Grain:ObservableCollection<GrainViewModel> = grain
+    member private x.RefreshParts = 
+            this.GetModel() |> ignore
 
-    member private x.UpdateModel recipe=
+    override x.UpdateModel recipe=
         grain 
         |> Seq.map (fun g -> g.GetModel()) |> Seq.toList
         |> UpdateGrain recipe
         |> EstimateOriginalGravity
         
+    

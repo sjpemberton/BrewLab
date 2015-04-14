@@ -7,11 +7,11 @@ open FSharp.ViewModule.Validation
 open Microsoft.FSharp.Data.UnitSystems.SI.UnitSymbols
 
 type GrainViewModel(grain) as this = 
-    inherit LabViewModel<grain<kg>>(grain, this.UpdateModel)
+    inherit LabViewModel<grain<kg>>(grain)
 
     let weight = this.Factory.Backing(<@ this.Weight @>, 0.001<kg>, greaterThan (fun a -> 0.000<kg>))
 
-    member private x.UpdateModel(model) = 
+    override x.UpdateModel(model) = 
         { model with Weight = weight.Value }
 
     member val Name = grain.Name

@@ -2,6 +2,7 @@
 
 open Units
 open Calculations
+open Microsoft.FSharp.Data.UnitSystems.SI.UnitSymbols
 
 type HopType =
 |Pellet
@@ -24,3 +25,19 @@ type water = {Name:string;} //chemical profile
 //| Hop of hop
 //| Adjunct of adjunct
 //| Grain of grain
+
+//Temp fixed list of grain
+    module Grain =
+
+        let Grains = [{ Name = "Maris Otter"
+                        Weight = 0.0<kg>
+                        Potential = 37.0<pgpkg>
+                        Colour = 4.0<EBC> };
+                      { Name = "Cara Amber"
+                        Weight = 0.0<kg>
+                        Potential = 35.0<pgpkg>
+                        Colour = 20.0<EBC> };
+                      { Name = "Cara Pils"
+                        Weight = 0.0<kg>
+                        Potential = 32.0<pgpkg>
+                        Colour = 10.0<EBC> }]
