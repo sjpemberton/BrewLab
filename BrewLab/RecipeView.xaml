@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:fsxaml="clr-namespace:FsXaml;assembly=FsXaml.Wpf"
         xmlns:local="clr-namespace:Views;assembly=BrewLab"         
-        xmlns:viewModels="clr-namespace:ViewModels;assembly=BrewLab"         
+        xmlns:viewModels="clr-namespace:ViewModels;assembly=BrewLab"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
         MinHeight="220" MinWidth="300" Height="Auto"
         fsxaml:ViewController.Custom="{x:Type local:RecipeViewController}">
     
@@ -22,6 +23,18 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <Button Grid.Row="2" FontSize="16" Command="{Binding AddMaltCommand}" >Add Grain</Button>
+        <ComboBox Grid.Row="2" FontSize="16" Text="Add Grain" ItemsSource="{Binding Grains}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}">
+                         <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseDown">
+                                <fsxaml:EventToCommand Command="{Binding AddMaltCommand}" CommandParameter="{Binding}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </TextBlock>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
     </Grid>
 </UserControl>

@@ -14,21 +14,29 @@ type RecipeViewModel(recipe) as this =
 
     let grain = ObservableCollection<GrainViewModel>()
 
-    
-
-    let addMaltCommand = 
-        this.Factory.CommandSync(fun param -> 
-            let g = { Name = "Maris Otter"
-                      Weight = 0.001<kg>
-                      Potential = 37.0<pgpkg>
-                      Colour = 4.0<EBC> }
-            //recipe <- AddGrain recipe g
-            this.Grain.Add(GrainViewModel(g))
+    let addMaltCommand malt = 
+        this.Factory.CommandSyncParam(fun param -> 
+            this.Grain.Add(GrainViewModel(malt))
             this.RefreshParts)
-                                        
 
+    //Temp fixed list of grain
+    let grains = [{ Name = "Maris Otter"
+                    Weight = 0.0<kg>
+                    Potential = 37.0<pgpkg>
+                    Colour = 4.0<EBC> };
+                  { Name = "Cara Amber"
+                    Weight = 0.0<kg>
+                    Potential = 35.0<pgpkg>
+                    Colour = 20.0<EBC> };
+                  { Name = "Cara Pils"
+                    Weight = 0.0<kg>
+                    Potential = 32.0<pgpkg>
+                    Colour = 10.0<EBC> }]
+                                        
+    member x.Grains = grains
     member x.AddMaltCommand = addMaltCommand
     member x.Grain:ObservableCollection<GrainViewModel> = grain
+
     member private x.RefreshParts = 
             this.GetModel() |> ignore
 
