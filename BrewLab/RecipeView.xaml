@@ -8,6 +8,9 @@
         MinHeight="220" MinWidth="300" Height="Auto"
         fsxaml:ViewController.Custom="{x:Type local:RecipeViewController}">
     
+    <UserControl.Resources>
+    </UserControl.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="32"/>
@@ -18,23 +21,35 @@
 
         <DataGrid Name="GrainBill" Grid.Row="1" Margin="3" ItemsSource="{Binding Grain}" AutoGenerateColumns="false">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Name}" Header="Name" Width="*"/>
+                <DataGridTemplateColumn Header="Name" Width="*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox Grid.Row="2" FontSize="16" Text="Add Grain" ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:RecipeView}, Path=DataContext.Grains}" Name="GrainDropDown">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="SelectionChanged">
+                                        <fsxaml:EventToCommand Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:RecipeView}, Path=DataContext.SwitchGrainCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Name}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>  
+                </DataGridTemplateColumn>
+                
                 <DataGridTextColumn Binding="{Binding Weight, Mode=TwoWay}" Header="Weight" Width="*"/>
             </DataGrid.Columns>
         </DataGrid>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Name="AddGrain" FontSize="16" Command="{Binding AddMaltCommand}">New Row</Button>
+        </Grid>
 
-        <ComboBox Grid.Row="2" FontSize="16" Text="Add Grain" ItemsSource="{Binding Grains}">
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Name}">
-                         <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="MouseDown">
-                                <fsxaml:EventToCommand Command="{Binding AddMaltCommand}" CommandParameter="{Binding}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </TextBlock>
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
     </Grid>
 </UserControl>

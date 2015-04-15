@@ -51,6 +51,7 @@
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
+    <Compile Include="Converters.fs" />
     <Compile Include="Ingredients.fs" />
     <Compile Include="Recipe.fs" />
     <Compile Include="ViewModels.fs" />

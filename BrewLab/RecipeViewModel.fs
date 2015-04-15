@@ -3,38 +3,47 @@
 open System.Collections.ObjectModel
 open System.Windows.Data
 open FSharp.ViewModule
+open FsXaml
 open Units
 open Models.Recipe
 open Models
 open Microsoft.FSharp.Data.UnitSystems.SI.UnitSymbols
 open System.ComponentModel
+open System
 
 type RecipeViewModel(recipe) as this = 
     inherit LabViewModel<_recipe<kg,L,degC>>(recipe)
 
     let grain = ObservableCollection<GrainViewModel>()
 
-    let addMaltCommand malt = 
-        this.Factory.CommandSyncParam(fun param -> 
-            this.Grain.Add(GrainViewModel(malt))
+    let addMaltCommand = 
+        this.Factory.CommandSync(fun param ->
+            this.Grain.Add(GrainViewModel({Grain = this.Grains.[0]; Weight = 0.0<kg>})) //Default to first in list - Could be empty instead?
             this.RefreshParts)
+
+//    let switchGrainCommand = 
+//        this.Factory.CommandSyncParam(fun (param:obj) ->
+//            match param with 
+//            | :? System.Windows.Controls.SelectionChangedEventArgs as e->
+//                this.Grain.Add(GrainViewModel(t.Item1 :?> grain<kg>)) //Need to stop this being a tuple
+//                this.RefreshParts
+//            | _ -> ignore())
+          
 
     //Temp fixed list of grain
     let grains = [{ Name = "Maris Otter"
-                    Weight = 0.0<kg>
                     Potential = 37.0<pgpkg>
                     Colour = 4.0<EBC> };
                   { Name = "Cara Amber"
-                    Weight = 0.0<kg>
                     Potential = 35.0<pgpkg>
                     Colour = 20.0<EBC> };
                   { Name = "Cara Pils"
-                    Weight = 0.0<kg>
                     Potential = 32.0<pgpkg>
                     Colour = 10.0<EBC> }]
                                         
-    member x.Grains = grains
+    member x.Grains: grain<kg> list = grains
     member x.AddMaltCommand = addMaltCommand
+    member x.SwitchGrainCommand = switchGrainCommand
     member x.Grain:ObservableCollection<GrainViewModel> = grain
 
     member private x.RefreshParts = 
