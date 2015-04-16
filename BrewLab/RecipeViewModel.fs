@@ -43,7 +43,7 @@ type RecipeViewModel(recipe) as this =
                                         
     member x.Grains: grain<kg> list = grains
     member x.AddMaltCommand = addMaltCommand
-    member x.SwitchGrainCommand = switchGrainCommand
+    //member x.SwitchGrainCommand = switchGrainCommand
     member x.Grain:ObservableCollection<GrainViewModel> = grain
 
     member private x.RefreshParts = 

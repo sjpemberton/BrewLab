@@ -25,21 +25,23 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <ComboBox Grid.Row="2" FontSize="16" Text="Add Grain" ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:RecipeView}, Path=DataContext.Grains}" Name="GrainDropDown">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="SelectionChanged">
-                                        <fsxaml:EventToCommand Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:RecipeView}, Path=DataContext.SwitchGrainCommand}"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Name}"/>
+                                        <TextBlock Text="{Binding Name}" Width="{Binding ElementName=GrainDropDown, Path=ActualWidth}">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="MouseDown">
+                                                    <fsxaml:EventToCommand CommandParameter="{Binding}" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridCell}}, Path=DataContext.SwitchGrainCommand}"/>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>   
+                                        </TextBlock>
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>  
                 </DataGridTemplateColumn>
-                
+                <DataGridTextColumn IsReadOnly="True" Binding="{Binding Potential}" Header="Potential" Width="*"/>
+                <DataGridTextColumn IsReadOnly="True" Binding="{Binding Colour}" Header="Colour (EBC)" Width="*"/>
                 <DataGridTextColumn Binding="{Binding Weight, Mode=TwoWay}" Header="Weight" Width="*"/>
             </DataGrid.Columns>
         </DataGrid>

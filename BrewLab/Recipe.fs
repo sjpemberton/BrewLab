@@ -8,7 +8,7 @@ open Microsoft.FSharp.Data.UnitSystems.SI.UnitSymbols
 module Recipe = 
     type _recipe<[<Measure>] 'w, [<Measure>] 'v, [<Measure>] 't> = 
         { Name : string
-          Grain : grain<'w> list
+          Grain : GrainAddition<'w> list
           Hops : hop<'w> list
           Adjuncts : adjunct<'w> list
           Yeast : yeast<'t> option
@@ -28,7 +28,7 @@ module Recipe =
 
     let EstimateOriginalGravity recipe = 
         {recipe with EstimatedOriginalGravity = recipe.Grain 
-                            |> List.fold (fun acc g -> acc + EstimateGravity recipe.Volume g.Weight g.Potential recipe.Efficiency) 0.0<sg>} 
+                            |> List.fold (fun acc g -> acc + EstimateGravity recipe.Volume g.Weight g.Grain.Potential recipe.Efficiency) 0.0<sg>} 
     
 //    let EstimateOriginalGravity recipe = 
 //        match recipe with
