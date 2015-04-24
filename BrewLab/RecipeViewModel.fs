@@ -19,11 +19,13 @@ type RecipeViewModel(recipe) as this =
     let refreshCommand =  this.Factory.CommandSync(fun param ->
         this.RefreshParts)
 
+    let handleRefresh vmEvent =
+        this.RefreshParts
+
     let addMaltCommand = 
         this.Factory.CommandSync(fun param ->
             let gvm = GrainViewModel({Grain = this.Grains.[0]; Weight = 0.0<kg>})
-            gvm.DependencyTracker.AddCommandDependency(refreshCommand, "Name")
-            gvm.DependencyTracker.AddCommandDependency(refreshCommand, <@gvm.Weight@>)
+            gvm.EventStream.Subscribe handleRefresh |> ignore
             this.Grain.Add(gvm) //Default to first in list - Could be empty instead?
             this.RefreshParts)
 
@@ -43,9 +45,9 @@ type RecipeViewModel(recipe) as this =
     member x.Grain:ObservableCollection<GrainViewModel> = grain
 
     member private x.RefreshParts = 
-            this.GetModel() |> ignore
+            this.UpdateModelSnapshot()
 
-    override x.UpdateModel recipe=
+    override x.UpdateModel recipe =
         grain 
         |> Seq.map (fun g -> g.GetModel()) |> Seq.toList
         |> UpdateGrain recipe
