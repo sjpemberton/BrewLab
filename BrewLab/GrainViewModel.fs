@@ -10,8 +10,6 @@ open System
 type GrainViewModel(addition) as this = 
     inherit LabViewModel<GrainAddition<kg>>(addition)
 
-    let eventStream = Event<ViewModelEvent>()
-
     let weight = this.Factory.Backing(<@ this.Weight @>, 0.001<kg>, greaterThan (fun a -> 0.000<kg>))
     let name = this.Factory.Backing(<@ this.Name @>, addition.Grain.Name)
     let potential = this.Factory.Backing(<@ this.Potential @>, addition.Grain.Potential)
@@ -30,8 +28,6 @@ type GrainViewModel(addition) as this =
     override x.UpdateModel(model) = 
         { model with Weight = weight.Value }
 
-    member this.EventStream = eventStream.Publish :> IObservable<ViewModelEvent>
-
     member x.Name with get() = name.Value and private set(v) = name.Value <- v
     member x.Potential with get() = potential.Value and private set(v) = potential.Value <- v
     member x.Colour with get() = colour.Value and private set(v) = colour.Value <- v
@@ -39,9 +35,8 @@ type GrainViewModel(addition) as this =
     member x.Weight 
         with get () = weight.Value
         and set (value) = 
-            weight.Value <- value
             this.UpdateModelSnapshot()
-            eventStream.Trigger ViewModelEvent.Update
-            
+            EventService.publish EventService.RecipeChange
+            weight.Value <- value
 
     member x.SwitchGrainCommand = switchGrainCommand

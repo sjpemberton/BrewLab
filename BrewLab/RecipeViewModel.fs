@@ -25,7 +25,6 @@ type RecipeViewModel(recipe) as this =
     let addMaltCommand = 
         this.Factory.CommandSync(fun param ->
             let gvm = GrainViewModel({Grain = this.Grains.[0]; Weight = 0.0<kg>})
-            gvm.EventStream.Subscribe handleRefresh |> ignore
             this.Grain.Add(gvm) //Default to first in list - Could be empty instead?
             this.RefreshParts)
 
@@ -39,6 +38,8 @@ type RecipeViewModel(recipe) as this =
                   { Name = "Cara Pils"
                     Potential = 32.0<pgpkg>
                     Colour = 10.0<EBC> }]
+
+    let disposeable = EventService.subscribe handleRefresh //Implement IDisposable on VM base
                                         
     member x.Grains: grain<kg> list = grains
     member x.AddMaltCommand = addMaltCommand
