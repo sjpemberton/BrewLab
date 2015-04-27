@@ -1,6 +1,5 @@
-﻿module EventService
+﻿module Events
 
-open System.Collections.Generic
 open System
 
 type LabEvent = 
@@ -8,18 +7,21 @@ type LabEvent =
     | EquipmentChange
     | UnitsChanged 
 
-type EventController() =
+type private RecipeEvent() =
 
     let event = Event<LabEvent>()
 
     member this.Event = event.Publish
-    member this.Subscribe o = this.Event.Subscribe o
+    member this.Subscribe (o:LabEvent -> unit) = this.Event.Subscribe o
     member this.Publish o =
         event.Trigger o
 
-let controller = EventController()
+let private controller = RecipeEvent()
 
-let subscribe o = controller.Subscribe o
+let getObservable = controller.Event :> IObservable<LabEvent>
+
+let subscribe (o:LabEvent -> unit) = 
+    controller.Subscribe o
 
 let publish o = controller.Publish o
 

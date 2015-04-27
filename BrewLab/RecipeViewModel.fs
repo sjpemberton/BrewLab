@@ -12,7 +12,7 @@ open System.ComponentModel
 open System
 
 type RecipeViewModel(recipe) as this = 
-    inherit LabViewModel<_recipe<kg,L,degC>>(recipe)
+    inherit LabViewModel<_recipe<kg,L,degC>>(recipe, Events.getObservable)
 
     let grain = ObservableCollection<GrainViewModel>()
 
@@ -24,15 +24,15 @@ type RecipeViewModel(recipe) as this =
 
     let addMaltCommand = 
         this.Factory.CommandSync(fun param ->
-            let gvm = GrainViewModel({Grain = this.Grains.[0]; Weight = 0.0<kg>})
+            let gvm = new GrainViewModel({Grain = this.Grains.[0]; Weight = 0.0<kg>})
             this.Grain.Add(gvm) //Default to first in list - Could be empty instead?
             this.RefreshParts)
 
     let removeMaltCommand =
         this.Factory.CommandSync(fun param ->
-            let g = this.Grain.Item(this.Grain.Count-1) :> IDisposable
-            g.Dispose()
-            this.Grain.RemoveAt(g))
+            let g = this.Grain.Item(this.Grain.Count-1) 
+            this.Grain.Remove(g) |> ignore
+            (g :> IDisposable).Dispose())
             //this.Grain.RemoveAt(this.Grain.Count-1)) //Default to first in list - Could be empty instead?
 
     //Temp fixed list of grain
@@ -55,7 +55,8 @@ type RecipeViewModel(recipe) as this =
     member private x.RefreshParts = 
             this.UpdateModelSnapshot()
 
-    override x.ChangeEvent e = handleRefresh e
+    override x.onChange e = 
+        handleRefresh e
 
     override x.UpdateModel recipe =
         grain 

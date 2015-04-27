@@ -8,7 +8,7 @@ open Microsoft.FSharp.Data.UnitSystems.SI.UnitSymbols
 open System
 
 type GrainViewModel(addition) as this = 
-    inherit LabViewModel<GrainAddition<kg>>(addition)
+    inherit LabViewModel<GrainAddition<kg>>(addition, Events.getObservable)
 
     let weight = this.Factory.Backing(<@ this.Weight @>, 0.001<kg>, greaterThan (fun a -> 0.000<kg>))
     let name = this.Factory.Backing(<@ this.Name @>, addition.Grain.Name)
@@ -30,8 +30,14 @@ type GrainViewModel(addition) as this =
     override x.UpdateModel(model) = 
         { model with Weight = weight.Value }
 
-    override x.ChangeEvent e = 
+    override x.onChange e = 
         ()
+
+    override x.observe o = 
+        o
+        |> Observable.filter (fun e -> match e with
+                                       | Events.RecipeChange -> true 
+                                       | _ -> false)
 
     member x.Name with get() = name.Value and private set(v) = name.Value <- v
     member x.Potential with get() = potential.Value and private set(v) = potential.Value <- v
@@ -41,7 +47,7 @@ type GrainViewModel(addition) as this =
         with get () = weight.Value
         and set (value) = 
             this.UpdateModelSnapshot()
-            EventService.publish EventService.RecipeChange
+            Events.publish Events.RecipeChange
             weight.Value <- value
 
     member x.SwitchGrainCommand = switchGrainCommand
