@@ -25,8 +25,13 @@ type GrainViewModel(addition) as this =
                 this.Colour <- grain.Colour
             | _ -> ignore())
 
+    //let disposable = EventService.subscribe (fun f -> ()) //Implement IDisposable on VM base
+
     override x.UpdateModel(model) = 
         { model with Weight = weight.Value }
+
+    override x.ChangeEvent e = 
+        ()
 
     member x.Name with get() = name.Value and private set(v) = name.Value <- v
     member x.Potential with get() = potential.Value and private set(v) = potential.Value <- v

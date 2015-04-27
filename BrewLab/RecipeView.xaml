@@ -51,6 +51,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button Name="AddGrain" FontSize="16" Command="{Binding AddMaltCommand}">New Row</Button>
+            <Button Grid.Column="1" Name="RemoveGrain" FontSize="16" Command="{Binding RemoveMaltCommand}">Remove Last</Button>
         </Grid>
 
     </Grid>

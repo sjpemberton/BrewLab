@@ -28,6 +28,13 @@ type RecipeViewModel(recipe) as this =
             this.Grain.Add(gvm) //Default to first in list - Could be empty instead?
             this.RefreshParts)
 
+    let removeMaltCommand =
+        this.Factory.CommandSync(fun param ->
+            let g = this.Grain.Item(this.Grain.Count-1) :> IDisposable
+            g.Dispose()
+            this.Grain.RemoveAt(g))
+            //this.Grain.RemoveAt(this.Grain.Count-1)) //Default to first in list - Could be empty instead?
+
     //Temp fixed list of grain
     let grains = [{ Name = "Maris Otter"
                     Potential = 37.0<pgpkg>
@@ -38,15 +45,17 @@ type RecipeViewModel(recipe) as this =
                   { Name = "Cara Pils"
                     Potential = 32.0<pgpkg>
                     Colour = 10.0<EBC> }]
-
-    let disposeable = EventService.subscribe handleRefresh //Implement IDisposable on VM base
                                         
     member x.Grains: grain<kg> list = grains
     member x.AddMaltCommand = addMaltCommand
+    member x.RemoveMaltCommand = removeMaltCommand
     member x.Grain:ObservableCollection<GrainViewModel> = grain
+    
 
     member private x.RefreshParts = 
             this.UpdateModelSnapshot()
+
+    override x.ChangeEvent e = handleRefresh e
 
     override x.UpdateModel recipe =
         grain 
