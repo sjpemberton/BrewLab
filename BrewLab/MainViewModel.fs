@@ -22,4 +22,4 @@ type MainViewModel() as this =
                    EstimatedOriginalGravity = 0.0<sg> }
 
     member x.Recipe 
-        with get() = RecipeViewModel(recipe)
+        with get() = new RecipeViewModel(recipe)
