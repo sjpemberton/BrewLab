@@ -25,12 +25,10 @@ type LabViewModel<'t>(model : 't) as this =
         with get () = disposable
         and set (v) = disposable <- v
     
+    abstract UpdateModel : 't -> 't
+    abstract processUpdate : 'e -> unit
+    override x.processUpdate e = ()
     member x.Event = eventController
     member x.onChange = eventController.Publish Events.RecipeChange
-    abstract processUpdate: 'e -> unit
-    default x.processUpdate e = 
-        ()
     member x.UpdateModelSnapshot() = model <- this.UpdateModel model
     member x.GetModel() = model
-    
-    abstract UpdateModel : 't -> 't

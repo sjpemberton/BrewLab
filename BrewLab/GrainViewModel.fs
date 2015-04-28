@@ -15,6 +15,12 @@ type GrainViewModel(addition) as this =
     let potential = this.Factory.Backing(<@ this.Potential @>, addition.Grain.Potential)
     let colour = this.Factory.Backing(<@ this.Colour @>, addition.Grain.Colour)
 
+    let observe obs = 
+        obs
+        |> Observable.filter (fun e -> match e with
+                                       | Events.UnitsChanged -> true 
+                                       | _ -> false)
+
     let switchGrainCommand = 
         this.Factory.CommandSyncParam(fun (param:obj) ->
             match param with 
@@ -26,16 +32,10 @@ type GrainViewModel(addition) as this =
             | _ -> ignore())
 
     do
-        this.Disposable <- Some (Observable.subscribe this.processUpdate (this.obs this.Event.Event))
+        this.Disposable <- Some (Observable.subscribe this.processUpdate (observe this.Event.Event))
 
     override x.UpdateModel(model) = 
         { model with Weight = weight.Value }
-
-    member x.obs o = 
-        o
-        |> Observable.filter (fun e -> match e with
-                                       | Events.UnitsChanged -> true 
-                                       | _ -> false)
 
     member x.Name with get() = name.Value and private set(v) = name.Value <- v
     member x.Potential with get() = potential.Value and private set(v) = potential.Value <- v
