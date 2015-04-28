@@ -12,7 +12,7 @@ open System.ComponentModel
 open System
 
 type RecipeViewModel(recipe) as this = 
-    inherit LabViewModel<_recipe<kg,L,degC>>(recipe, Events.getObservable)
+    inherit LabViewModel<_recipe<kg,L,degC>>(recipe)
 
     let grain = ObservableCollection<GrainViewModel>()
 
@@ -45,6 +45,9 @@ type RecipeViewModel(recipe) as this =
                   { Name = "Cara Pils"
                     Potential = 32.0<pgpkg>
                     Colour = 10.0<EBC> }]
+
+    do
+        this.Disposable <- Some (Observable.subscribe this.processUpdate this.Event.Event)  
                                         
     member x.Grains: grain<kg> list = grains
     member x.AddMaltCommand = addMaltCommand
@@ -55,7 +58,7 @@ type RecipeViewModel(recipe) as this =
     member private x.RefreshParts = 
             this.UpdateModelSnapshot()
 
-    override x.onChange e = 
+    override x.processUpdate e = 
         handleRefresh e
 
     override x.UpdateModel recipe =

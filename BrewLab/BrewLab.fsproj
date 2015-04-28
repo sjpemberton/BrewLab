@@ -51,7 +51,7 @@
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
-    <Compile Include="EventAggregator.fs" />
+    <Compile Include="EventService.fs" />
     <Compile Include="Converters.fs" />
     <Compile Include="Ingredients.fs" />
     <Compile Include="Recipe.fs" />
