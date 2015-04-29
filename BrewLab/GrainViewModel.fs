@@ -23,12 +23,6 @@ module Grain =
         let potential = this.Factory.Backing(<@ this.Potential @>, addition.Grain.Potential)
         let colour = this.Factory.Backing(<@ this.Colour @>, addition.Grain.Colour)
 
-        let observe obs = 
-            obs
-            |> Observable.filter (fun e -> match e with
-                                           | Events.UnitsChanged -> true 
-                                           | _ -> false)
-
         let switchGrainCommand = 
             this.Factory.CommandSyncParam(fun (param:obj) ->
                 match param with 
@@ -38,9 +32,6 @@ module Grain =
                     this.Potential <- grain.Potential
                     this.Colour <- grain.Colour
                 | _ -> ignore())
-
-    //    do
-    //        this.Disposable <- Some (Observable.subscribe this.processUpdate (observe this.Event.Event))
 
         override x.UpdateModel(model) = 
             { model with Weight = weight.Value }

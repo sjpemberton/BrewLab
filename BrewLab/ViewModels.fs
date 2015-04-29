@@ -2,36 +2,41 @@
 
 open FSharp.ViewModule
 open System
+open Events
+[<AutoOpen>]
+module ViewModels =
 
-[<AbstractClass>]
-type LabViewModel<'t>(model : 't, observe : IEvent<'e> -> IObservable<'e>) as this = 
-    inherit ViewModelBase()
-    let mutable model = model
-    let changeEvent = new Event<'e>()
+    let subscribe event observable callback = 
+        event
+        |> observable
+        |> Observable.subscribe callback
+
+    [<AbstractClass>]
+    type LabViewModel<'t>(model : 't, observe : IEvent<'e> -> IObservable<'e>) as this = 
+        inherit ViewModelBase()
+        let mutable model = model
+        let changeEvent = new Event<'e>()
     
-    let mutable disposable = 
-        { new IDisposable with
-              member x.Dispose() = () }
+        let mutable disposable = 
+            { new IDisposable with
+                  member x.Dispose() = () }
     
-    do 
-        let d1 = 
-            Events.RecipeEvent.Instance.Event
-            |> observe
-            |> Observable.subscribe this.processUpdate
-        
-        let d2 = this.ChangeEvent.Subscribe Events.RecipeEvent.Instance.Publish
-        disposable <- { new IDisposable with
-                            member this.Dispose() = 
-                                d1.Dispose()
-                                d2.Dispose() }
+        do 
+            let updateHandle = subscribe RecipeEvent.Instance.Event observe this.processUpdate
+            let publishHandle = subscribe this.ChangeEvent (fun o -> o) RecipeEvent.Instance.Publish
+
+            disposable <- { new IDisposable with
+                                member this.Dispose() = 
+                                    updateHandle.Dispose()
+                                    publishHandle.Dispose() }
     
-    interface IDisposable with
-        member x.Dispose() = disposable.Dispose()
+        interface IDisposable with
+            member x.Dispose() = disposable.Dispose()
     
-    member x.ChangeEvent : IEvent<_> = changeEvent.Publish
-    abstract UpdateModel : 't -> 't
-    abstract processUpdate : 'e -> unit
-    override x.processUpdate e = ()
-    member x.onChange = changeEvent.Trigger Events.RecipeChange
-    member x.UpdateModelSnapshot() = model <- this.UpdateModel model
-    member x.GetModel() = model
+        member x.ChangeEvent : IEvent<_> = changeEvent.Publish
+        member x.onChange = changeEvent.Trigger Events.RecipeChange
+        abstract UpdateModel : 't -> 't
+        abstract processUpdate : 'e -> unit
+        override x.processUpdate e = ()
+        member x.UpdateModelSnapshot() = model <- this.UpdateModel model
+        member x.GetModel() = model
