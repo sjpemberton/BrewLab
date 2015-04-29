@@ -46,9 +46,9 @@ type RecipeViewModel(recipe) as this =
                     Potential = 32.0<pgpkg>
                     Colour = 10.0<EBC> }]
 
-    do
-        this.Disposable <- Some (Observable.subscribe this.processUpdate this.Event.Event)  
-                                        
+//    do
+//        this.Disposable <- Some (Observable.subscribe this.processUpdate this.Event.Event)  
+//                                        
     member x.Grains: grain<kg> list = grains
     member x.AddMaltCommand = addMaltCommand
     member x.RemoveMaltCommand = removeMaltCommand

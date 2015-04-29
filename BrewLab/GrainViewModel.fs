@@ -31,11 +31,14 @@ type GrainViewModel(addition) as this =
                 this.Colour <- grain.Colour
             | _ -> ignore())
 
-    do
-        this.Disposable <- Some (Observable.subscribe this.processUpdate (observe this.Event.Event))
+//    do
+//        this.Disposable <- Some (Observable.subscribe this.processUpdate (observe this.Event.Event))
 
     override x.UpdateModel(model) = 
         { model with Weight = weight.Value }
+
+    override x.subscribe e = 
+        observe (e :> IObservable<_>) 
 
     member x.Name with get() = name.Value and private set(v) = name.Value <- v
     member x.Potential with get() = potential.Value and private set(v) = potential.Value <- v
