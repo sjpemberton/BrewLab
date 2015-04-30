@@ -10,13 +10,13 @@ open System
 [<AutoOpen>]
 module Grain =
 
-    let observe obs = 
-        obs
+    let observe source = 
+        source
         |> Observable.filter (function Events.UnitsChanged -> true 
-                                       | _ -> false)
+                                                       | _ -> false)
 
-    type GrainViewModel(addition) as this = 
-        inherit LabViewModel<GrainAddition<kg>>(addition, observe)
+    type GrainViewModel (addition) as this = 
+        inherit LabViewModel<GrainAddition<kg>>(addition)
 
         let weight = this.Factory.Backing(<@ this.Weight @>, 0.001<kg>, greaterThan (fun a -> 0.000<kg>))
         let name = this.Factory.Backing(<@ this.Name @>, addition.Grain.Name)
@@ -33,8 +33,18 @@ module Grain =
                     this.Colour <- grain.Colour
                 | _ -> ignore())
 
+        do
+            base.BindEvents
+
         override x.UpdateModel(model) = 
             { model with Weight = weight.Value }
+
+        override x.OnSubscribe source = 
+            source
+            |> Observable.filter (function Events.UnitsChanged -> true 
+                                                          | _ -> false)
+        override x.OnEvent e =
+            ()
 
         member x.Name with get() = name.Value and private set(v) = name.Value <- v
         member x.Potential with get() = potential.Value and private set(v) = potential.Value <- v
@@ -48,3 +58,5 @@ module Grain =
                 weight.Value <- value
 
         member x.SwitchGrainCommand = switchGrainCommand
+
+    
