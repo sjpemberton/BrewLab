@@ -4,8 +4,6 @@ open FSharp.ViewModule
 open Models.Recipe
 open Units
 
-type Agent<'T> = MailboxProcessor<'T>
-
 type MainViewModel() as this = 
     inherit ViewModelBase()
 
