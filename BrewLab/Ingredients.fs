@@ -16,7 +16,7 @@ type HopType =
 //|DryHop
 
 type hop<[<Measure>] 'w> = {Name:string; Alpha:float<percentage>;}
-type HopAddition<[<Measure>] 'w>  = { Hop:hop<'w>; Weight:float<'w>; Time:float; Type:HopType}
+type HopAddition<[<Measure>] 'w>  = { Hop:hop<'w>; Weight:float<'w>; Time:float<minute>; Type:HopType}
 type adjunct<[<Measure>] 'w> = {Name:string; Weight:float<'w>; Description:string }
 type grain<[<Measure>] 'w> = {Name:string; Potential:float<gp/'w>; Colour:float<EBC>;}
 type GrainAddition<[<Measure>] 'w>  = {Grain: grain<'w>; Weight:float<'w>}

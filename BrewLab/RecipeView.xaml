@@ -7,52 +7,129 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
         MinHeight="220" MinWidth="300" Height="Auto"
         fsxaml:ViewController.Custom="{x:Type local:RecipeViewController}">
-    
+
     <UserControl.Resources>
     </UserControl.Resources>
-    
-    <Grid>
+
+    <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="32"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="32" />
         </Grid.RowDefinitions>
         <TextBox Name="RecipeName" Text="Enter Recipe Name Here..." Grid.Row="0"  FontSize="16"/>
-
-        <DataGrid Name="GrainBill" Grid.Row="1" Margin="3" ItemsSource="{Binding Grain}" AutoGenerateColumns="false">
-            <DataGrid.Columns>
-                <DataGridTemplateColumn Header="Name" Width="*">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <ComboBox Grid.Row="2" FontSize="16" Text="Add Grain" ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:RecipeView}, Path=DataContext.Grains}" Name="GrainDropDown">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Name}" Width="{Binding ElementName=GrainDropDown, Path=ActualWidth}">
-                                            <i:Interaction.Triggers>
-                                                <i:EventTrigger EventName="MouseDown">
-                                                    <fsxaml:EventToCommand CommandParameter="{Binding}" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridCell}}, Path=DataContext.SwitchGrainCommand}"/>
-                                                </i:EventTrigger>
-                                            </i:Interaction.Triggers>   
-                                        </TextBlock>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>  
-                </DataGridTemplateColumn>
-                <DataGridTextColumn IsReadOnly="True" Binding="{Binding Potential}" Header="Potential" Width="*"/>
-                <DataGridTextColumn IsReadOnly="True" Binding="{Binding Colour}" Header="Colour (EBC)" Width="*"/>
-                <DataGridTextColumn Binding="{Binding Weight, Mode=TwoWay}" Header="Weight" Width="*"/>
-            </DataGrid.Columns>
-        </DataGrid>
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Name="AddGrain" FontSize="16" Command="{Binding AddMaltCommand}">New Row</Button>
-            <Button Grid.Column="1" Name="RemoveGrain" FontSize="16" Command="{Binding RemoveMaltCommand}">Remove Last</Button>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="32" />
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="32" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="Fermentables" Grid.Row="0"  FontSize="14"/>
+                <DataGrid Name="GrainBill" Grid.Row="1" Margin="3" ItemsSource="{Binding Grain}" AutoGenerateColumns="false">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Name" Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ComboBox Grid.Row="2" FontSize="16" Text="Add Grain" ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:RecipeView}, Path=DataContext.Grains}" Name="GrainDropDown">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Name}" Width="{Binding ElementName=GrainDropDown, Path=ActualWidth}">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="MouseDown">
+                                                    <fsxaml:EventToCommand CommandParameter="{Binding}" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridCell}}, Path=DataContext.SwitchGrainCommand}"/>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                                </TextBlock>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn IsReadOnly="True" Binding="{Binding Potential}" Header="Potential" Width="*"/>
+                        <DataGridTextColumn IsReadOnly="True" Binding="{Binding Colour}" Header="Colour (EBC)" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding Weight, Mode=TwoWay}" Header="Weight" Width="*"/>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Name="RemoveGrainButton"  Width="28" Height="28" HorizontalAlignment="Center" VerticalAlignment="Center" Background="OrangeRed" Command="{Binding RemoveMaltCommand}" Visibility="Hidden" Content="X" ></Button>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource AncestorType=DataGridRow}}" Value="True">
+                                            <Setter Property="Visibility" TargetName="RemoveGrainButton" Value="Visible"/>
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Name="AddGrain" FontSize="14" Command="{Binding AddMaltCommand}">Add Fermentable</Button>
+                </Grid>
+            </Grid>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="32" />
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="32" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="Hop Additions" Grid.Row="0"  FontSize="14"/>
+                <DataGrid Name="HopAdditions" Grid.Row="1" Margin="3"  ItemsSource="{Binding HopAdditions}" AutoGenerateColumns="false">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Name" Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ComboBox Grid.Row="2" FontSize="16" Text="Select Hop" ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:RecipeView}, Path=DataContext.Hops}" Name="HopDropDown">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Name}" Width="{Binding ElementName=HopDropDown, Path=ActualWidth}">
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName="MouseDown">
+                                                            <fsxaml:EventToCommand CommandParameter="{Binding}" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridCell}}, Path=DataContext.SwitchHopCommand}"/>
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>
+                                                </TextBlock>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn IsReadOnly="True" Binding="{Binding Alpha}" Header="Alpha (%)" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding Type, Mode=TwoWay}" Header="Type" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding Weight, Mode=TwoWay}" Header="Weight" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding Time, Mode=TwoWay}" Header="Time" Width="*"/>
+                        <DataGridTextColumn IsReadOnly="True" Binding="{Binding IBU}" Header="IBU" Width="*"/>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Name="RemoveHopButton"  Width="28" Height="28" HorizontalAlignment="Center" VerticalAlignment="Center" Background="OrangeRed" Command="{Binding RemoveMaltCommand}" Visibility="Hidden" Content="X" ></Button>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource AncestorType=DataGridRow}}" Value="True">
+                                            <Setter Property="Visibility" TargetName="RemoveHopButton" Value="Visible"/>
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Name="AddHop" FontSize="14" Command="{Binding AddHopCommand}">Add Hop</Button>
+                </Grid>
+            </Grid>
         </Grid>
-
     </Grid>
 </UserControl>
