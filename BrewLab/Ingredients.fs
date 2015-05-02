@@ -24,8 +24,8 @@ type yeast<[<Measure>] 't> = {Name:string; Attenuation:float<percentage>; TempRa
 type water = {Name:string;} //chemical profile
 
 
-//type Ingredient =
-//| Hop of hop
-//| Adjunct of adjunct
-//| Grain of grain
+type Ingredient =
+| Hop of HopAddition<g>
+| Adjunct of adjunct<g>
+| Grain of GrainAddition<kg>
 

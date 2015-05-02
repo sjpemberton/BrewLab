@@ -56,7 +56,7 @@
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Name="RemoveGrainButton"  Width="28" Height="28" HorizontalAlignment="Center" VerticalAlignment="Center" Background="OrangeRed" Command="{Binding RemoveMaltCommand}" Visibility="Hidden" Content="X" ></Button>
+                                    <Button Name="RemoveGrainButton"  Width="28" Height="28" HorizontalAlignment="Center" VerticalAlignment="Center" Background="OrangeRed" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:RecipeView}, Path=DataContext.RemoveMaltCommand}" Visibility="Hidden" Content="X" ></Button>
                                     <DataTemplate.Triggers>
                                         <DataTrigger Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource AncestorType=DataGridRow}}" Value="True">
                                             <Setter Property="Visibility" TargetName="RemoveGrainButton" Value="Visible"/>
@@ -111,7 +111,7 @@
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Name="RemoveHopButton"  Width="28" Height="28" HorizontalAlignment="Center" VerticalAlignment="Center" Background="OrangeRed" Command="{Binding RemoveMaltCommand}" Visibility="Hidden" Content="X" ></Button>
+                                    <Button Name="RemoveHopButton"  Width="28" Height="28" HorizontalAlignment="Center" VerticalAlignment="Center" Background="OrangeRed" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:RecipeView}, Path=DataContext.RemoveHopCommand}" Visibility="Hidden" Content="X" ></Button>
                                     <DataTemplate.Triggers>
                                         <DataTrigger Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource AncestorType=DataGridRow}}" Value="True">
                                             <Setter Property="Visibility" TargetName="RemoveHopButton" Value="Visible"/>

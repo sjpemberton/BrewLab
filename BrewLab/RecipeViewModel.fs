@@ -18,12 +18,14 @@ type RecipeViewModel(recipe) as this =
     let refreshCommand = this.Factory.CommandSync(fun param -> this.RefreshParts)
     let handleRefresh event = this.RefreshParts
     
+    let addIngredient = function 
+        | Hop h -> this.HopAdditions.Add(new HopViewModel(h))
+        | Grain g -> this.Grain.Add(new GrainViewModel(g))
+        | _ -> () //TODO - handle adjuncts
+    
     let addMaltCommand = 
-        this.Factory.CommandSync(fun param -> 
-            let gvm = 
-                new GrainViewModel({ Grain = this.Grains.[0]
-                                     Weight = 0.0<kg> })
-            this.Grain.Add(gvm) //Default to first in list - Could be empty instead?
+        this.Factory.CommandSync(fun p -> 
+            addIngredient <| Grain { Grain = this.Grains.[0];  Weight = 0.0<kg> } //Default to first in list - Could be empty instead?
             this.RefreshParts)
     
     let removeMaltCommand = 
@@ -33,12 +35,11 @@ type RecipeViewModel(recipe) as this =
             (g :> IDisposable).Dispose())
     
     let addHopCommand = 
-        this.Factory.CommandSync(fun param -> 
-            let hop = new HopViewModel({ Hop = this.Hops.[0]
-                                         Weight = 0.0<g> 
-                                         Time = 0.0<minute>
-                                         Type = HopType.Leaf})
-            this.HopAdditions.Add(hop) //Default to first in list - Could be empty instead?
+        this.Factory.CommandSync(fun p -> 
+            addIngredient <| Hop { Hop = this.Hops.[0]
+                                   Weight = 0.0<g>
+                                   Time = 0.0<minute>
+                                   Type = HopType.Leaf } //Default to first in list - Could be empty instead?
             this.RefreshParts)
     
     let removeHopCommand = 
@@ -72,11 +73,10 @@ type RecipeViewModel(recipe) as this =
     member x.AddMaltCommand = addMaltCommand
     member x.AddHopCommand = addHopCommand
     member x.RemoveMaltCommand = removeMaltCommand
-    member x.RemoveHopComman = removeHopCommand
+    member x.RemoveHopCommand = removeHopCommand
     member x.Grain : ObservableCollection<GrainViewModel> = grain
     member x.HopAdditions : ObservableCollection<HopViewModel> = hopAdditions
     member private x.RefreshParts = this.UpdateModelSnapshot()
-
     override x.UpdateModel recipe = 
         grain
         |> Seq.map (fun g -> g.GetModel())
