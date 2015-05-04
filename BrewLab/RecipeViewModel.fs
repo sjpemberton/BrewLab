@@ -22,6 +22,7 @@ type RecipeViewModel(recipe) as this =
         | Hop h -> this.HopAdditions.Add(new HopViewModel(h))
         | Grain g -> this.Grain.Add(new GrainViewModel(g))
         | _ -> () //TODO - handle adjuncts
+
     
     let addMaltCommand = 
         this.Factory.CommandSync(fun p -> 
@@ -29,24 +30,19 @@ type RecipeViewModel(recipe) as this =
             this.RefreshParts)
     
     let removeMaltCommand = 
-        this.Factory.CommandSync(fun param -> 
-            let g = this.Grain.Item(this.Grain.Count - 1)
-            this.Grain.Remove(g) |> ignore
-            (g :> IDisposable).Dispose())
+        this.Factory.CommandSyncParam(fun grainVm -> 
+            this.Grain.Remove(grainVm) |> ignore
+            (grainVm:> IDisposable).Dispose())
     
     let addHopCommand = 
         this.Factory.CommandSync(fun p -> 
-            addIngredient <| Hop { Hop = this.Hops.[0]
-                                   Weight = 0.0<g>
-                                   Time = 0.0<minute>
-                                   Type = HopType.Leaf } //Default to first in list - Could be empty instead?
+            addIngredient <| Hop { Hop = this.Hops.[0]; Weight = 0.0<g>; Time = 0.0<minute>; Type = HopType.Leaf }
             this.RefreshParts)
     
     let removeHopCommand = 
-        this.Factory.CommandSync(fun param -> 
-            let hop = this.HopAdditions.Item(this.HopAdditions.Count - 1)
-            this.HopAdditions.Remove(hop) |> ignore
-            (hop :> IDisposable).Dispose())
+        this.Factory.CommandSyncParam(fun hopVm ->
+            this.HopAdditions.Remove(hopVm) |> ignore
+            (hopVm :> IDisposable).Dispose())
     
     //this.Grain.RemoveAt(this.Grain.Count-1)) //Default to first in list - Could be empty instead?
     //Temp fixed list of grain

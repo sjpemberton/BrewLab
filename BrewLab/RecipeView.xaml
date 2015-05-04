@@ -34,7 +34,7 @@
                         <DataGridTemplateColumn Header="Name" Width="*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <ComboBox Grid.Row="2" FontSize="16" Text="Add Grain" ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:RecipeView}, Path=DataContext.Grains}" Name="GrainDropDown">
+                                    <ComboBox Grid.Row="2" FontSize="16" Text="Add Grain" ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:RecipeView}, Path=DataContext.Grains}" SelectedItem="{Binding Grain}" Name="GrainDropDown">
                                         <ComboBox.ItemTemplate>
                                             <DataTemplate>
                                                 <TextBlock Text="{Binding Name}" Width="{Binding ElementName=GrainDropDown, Path=ActualWidth}">
@@ -50,13 +50,15 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTextColumn IsReadOnly="True" Binding="{Binding Potential}" Header="Potential" Width="*"/>
-                        <DataGridTextColumn IsReadOnly="True" Binding="{Binding Colour}" Header="Colour (EBC)" Width="*"/>
+                        <DataGridTextColumn IsReadOnly="True" Binding="{Binding Grain.Potential}" Header="Potential" Width="*"/>
+                        <DataGridTextColumn IsReadOnly="True" Binding="{Binding Grain.Colour}" Header="Colour (EBC)" Width="*"/>
                         <DataGridTextColumn Binding="{Binding Weight, Mode=TwoWay}" Header="Weight" Width="*"/>
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Name="RemoveGrainButton"  Width="28" Height="28" HorizontalAlignment="Center" VerticalAlignment="Center" Background="OrangeRed" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:RecipeView}, Path=DataContext.RemoveMaltCommand}" Visibility="Hidden" Content="X" ></Button>
+                                    <Button Name="RemoveGrainButton"  Width="28" Height="28" HorizontalAlignment="Center" VerticalAlignment="Center" Background="OrangeRed" 
+                                            CommandParameter="{Binding}"
+                                            Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:RecipeView}, Path=DataContext.RemoveMaltCommand}" Visibility="Hidden" Content="X" ></Button>
                                     <DataTemplate.Triggers>
                                         <DataTrigger Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource AncestorType=DataGridRow}}" Value="True">
                                             <Setter Property="Visibility" TargetName="RemoveGrainButton" Value="Visible"/>
@@ -87,7 +89,7 @@
                         <DataGridTemplateColumn Header="Name" Width="*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <ComboBox Grid.Row="2" FontSize="16" Text="Select Hop" ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:RecipeView}, Path=DataContext.Hops}" Name="HopDropDown">
+                                    <ComboBox Grid.Row="2" FontSize="16" Text="Select Hop" ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:RecipeView}, Path=DataContext.Hops}" SelectedItem="{Binding Hop}" Name="HopDropDown">
                                         <ComboBox.ItemTemplate>
                                             <DataTemplate>
                                                 <TextBlock Text="{Binding Name}" Width="{Binding ElementName=HopDropDown, Path=ActualWidth}">
@@ -103,7 +105,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTextColumn IsReadOnly="True" Binding="{Binding Alpha}" Header="Alpha (%)" Width="*"/>
+                        <DataGridTextColumn IsReadOnly="True" Binding="{Binding Hop.Alpha}" Header="Alpha (%)" Width="*"/>
                         <DataGridTextColumn Binding="{Binding Type, Mode=TwoWay}" Header="Type" Width="*"/>
                         <DataGridTextColumn Binding="{Binding Weight, Mode=TwoWay}" Header="Weight" Width="*"/>
                         <DataGridTextColumn Binding="{Binding Time, Mode=TwoWay}" Header="Time" Width="*"/>
@@ -111,7 +113,9 @@
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Name="RemoveHopButton"  Width="28" Height="28" HorizontalAlignment="Center" VerticalAlignment="Center" Background="OrangeRed" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:RecipeView}, Path=DataContext.RemoveHopCommand}" Visibility="Hidden" Content="X" ></Button>
+                                    <Button Name="RemoveHopButton"  Width="28" Height="28" HorizontalAlignment="Center" VerticalAlignment="Center" Background="OrangeRed" 
+                                            CommandParameter="{Binding}"
+                                            Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:RecipeView}, Path=DataContext.RemoveHopCommand}" Visibility="Hidden" Content="X" ></Button>
                                     <DataTemplate.Triggers>
                                         <DataTrigger Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource AncestorType=DataGridRow}}" Value="True">
                                             <Setter Property="Visibility" TargetName="RemoveHopButton" Value="Visible"/>
