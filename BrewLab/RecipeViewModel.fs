@@ -12,26 +12,25 @@ open System.ComponentModel
 open System
 
 type RecipeViewModel(recipe) as this = 
-    inherit LabViewModel<_recipe<kg, L, degC>>(recipe)
+    inherit LabViewModel<_recipe<kg, L, degC>>(recipe, Events.LabEvent.RecipeChange)
     let grain = ObservableCollection<GrainViewModel>()
     let hopAdditions = ObservableCollection<HopViewModel>()
-    let refreshCommand = this.Factory.CommandSync(fun param -> this.RefreshParts)
-    let handleRefresh event = this.RefreshParts
+    let handleRefresh event = this.RefreshParts 
     
     let addIngredient = function 
         | Hop h -> this.HopAdditions.Add(new HopViewModel(h))
         | Grain g -> this.Grain.Add(new GrainViewModel(g))
         | _ -> () //TODO - handle adjuncts
-
     
     let addMaltCommand = 
         this.Factory.CommandSync(fun p -> 
-            addIngredient <| Grain { Grain = this.Grains.[0];  Weight = 0.0<kg> } //Default to first in list - Could be empty instead?
+            addIngredient <| Grain { Grain = this.Grains.[0];  Weight = 0.0<kg> }
             this.RefreshParts)
     
     let removeMaltCommand = 
         this.Factory.CommandSyncParam(fun grainVm -> 
             this.Grain.Remove(grainVm) |> ignore
+            this.RefreshParts
             (grainVm:> IDisposable).Dispose())
     
     let addHopCommand = 
@@ -42,9 +41,9 @@ type RecipeViewModel(recipe) as this =
     let removeHopCommand = 
         this.Factory.CommandSyncParam(fun hopVm ->
             this.HopAdditions.Remove(hopVm) |> ignore
+            this.RefreshParts
             (hopVm :> IDisposable).Dispose())
     
-    //this.Grain.RemoveAt(this.Grain.Count-1)) //Default to first in list - Could be empty instead?
     //Temp fixed list of grain
     let grains = 
         [ { Name = "Maris Otter"
@@ -62,10 +61,14 @@ type RecipeViewModel(recipe) as this =
             Alpha = 7.9<percentage> }
           { Name = "Northen Brewer"
             Alpha = 11.0<percentage> } ]
+
+    let hopTypes = 
+        [Leaf; Pellet; Extract]
     
-    do base.BindEvent(Events.RecipeEvent.Instance.Event, (fun o -> o :> IObservable<_>), handleRefresh)
+    do base.BindEvent(Events.RecipeEvent.Instance.Event, (fun o -> o), handleRefresh)
     member x.Grains : grain<kg> list = grains //TODO - Move to a standing data service
     member x.Hops : hop<g> list = hops //TODO - Move to a standing data service
+    member x.HopTypes = hopTypes
     member x.AddMaltCommand = addMaltCommand
     member x.AddHopCommand = addHopCommand
     member x.RemoveMaltCommand = removeMaltCommand
