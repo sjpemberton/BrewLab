@@ -12,42 +12,38 @@ open System.ComponentModel
 open System
 
 type RecipeViewModel(recipe) as this = 
-    inherit LabViewModel<_recipe<kg, L, degC>>(recipe)
+    inherit LabViewModel<_recipe<kg, L, degC>>(recipe, Events.LabEvent.RecipeChange)
     let grain = ObservableCollection<GrainViewModel>()
     let hopAdditions = ObservableCollection<HopViewModel>()
-    let refreshCommand = this.Factory.CommandSync(fun param -> this.RefreshParts)
-    let handleRefresh event = this.RefreshParts
+    let handleRefresh event = this.RefreshParts 
+    
+    let addIngredient = function 
+        | Hop h -> this.HopAdditions.Add(new HopViewModel(h))
+        | Grain g -> this.Grain.Add(new GrainViewModel(g))
+        | _ -> () //TODO - handle adjuncts
     
     let addMaltCommand = 
-        this.Factory.CommandSync(fun param -> 
-            let gvm = 
-                new GrainViewModel({ Grain = this.Grains.[0]
-                                     Weight = 0.0<kg> })
-            this.Grain.Add(gvm) //Default to first in list - Could be empty instead?
+        this.Factory.CommandSync(fun p -> 
+            addIngredient <| Grain { Grain = this.Grains.[0];  Weight = 0.0<kg> }
             this.RefreshParts)
     
     let removeMaltCommand = 
-        this.Factory.CommandSync(fun param -> 
-            let g = this.Grain.Item(this.Grain.Count - 1)
-            this.Grain.Remove(g) |> ignore
-            (g :> IDisposable).Dispose())
+        this.Factory.CommandSyncParam(fun grainVm -> 
+            this.Grain.Remove(grainVm) |> ignore
+            this.RefreshParts
+            (grainVm:> IDisposable).Dispose())
     
     let addHopCommand = 
-        this.Factory.CommandSync(fun param -> 
-            let hop = new HopViewModel({ Hop = this.Hops.[0]
-                                         Weight = 0.0<g> 
-                                         Time = 0.0<minute>
-                                         Type = HopType.Leaf})
-            this.HopAdditions.Add(hop) //Default to first in list - Could be empty instead?
+        this.Factory.CommandSync(fun p -> 
+            addIngredient <| Hop { Hop = this.Hops.[0]; Weight = 0.0<g>; Time = 0.0<minute>; Type = HopType.Leaf }
             this.RefreshParts)
     
     let removeHopCommand = 
-        this.Factory.CommandSync(fun param -> 
-            let hop = this.HopAdditions.Item(this.HopAdditions.Count - 1)
-            this.HopAdditions.Remove(hop) |> ignore
-            (hop :> IDisposable).Dispose())
+        this.Factory.CommandSyncParam(fun hopVm ->
+            this.HopAdditions.Remove(hopVm) |> ignore
+            this.RefreshParts
+            (hopVm :> IDisposable).Dispose())
     
-    //this.Grain.RemoveAt(this.Grain.Count-1)) //Default to first in list - Could be empty instead?
     //Temp fixed list of grain
     let grains = 
         [ { Name = "Maris Otter"
@@ -65,18 +61,21 @@ type RecipeViewModel(recipe) as this =
             Alpha = 7.9<percentage> }
           { Name = "Northen Brewer"
             Alpha = 11.0<percentage> } ]
+
+    let hopTypes = 
+        [Leaf; Pellet; Extract]
     
-    do base.BindEvent(Events.RecipeEvent.Instance.Event, (fun o -> o :> IObservable<_>), handleRefresh)
+    do base.BindEvent(Events.RecipeEvent.Instance.Event, (fun o -> o), handleRefresh)
     member x.Grains : grain<kg> list = grains //TODO - Move to a standing data service
     member x.Hops : hop<g> list = hops //TODO - Move to a standing data service
+    member x.HopTypes = hopTypes
     member x.AddMaltCommand = addMaltCommand
     member x.AddHopCommand = addHopCommand
     member x.RemoveMaltCommand = removeMaltCommand
-    member x.RemoveHopComman = removeHopCommand
+    member x.RemoveHopCommand = removeHopCommand
     member x.Grain : ObservableCollection<GrainViewModel> = grain
     member x.HopAdditions : ObservableCollection<HopViewModel> = hopAdditions
     member private x.RefreshParts = this.UpdateModelSnapshot()
-
     override x.UpdateModel recipe = 
         grain
         |> Seq.map (fun g -> g.GetModel())

@@ -56,7 +56,7 @@
     <Compile Include="Ingredients.fs" />
     <Compile Include="Recipe.fs" />
     <Compile Include="ViewModels.fs" />
-    <Compile Include="GrainViewModel.fs" />
+    <Compile Include="IngredientViewModels.fs" />
     <Compile Include="RecipeViewModel.fs" />
     <Compile Include="MainViewModel.fs" />
     <Compile Include="RecipeView.xaml.fs" />

@@ -4,6 +4,8 @@ open System
 
 type LabEvent = 
     | RecipeChange
+    | HopChange
+    | FermentableChange
     | EquipmentChange
     | UnitsChanged
 
@@ -15,5 +17,5 @@ type RecipeEvent private() =
 
     member this.Event = event.Publish
     member this.Subscribe o = this.Event.Subscribe o
-    member this.Publish o = event.Trigger o
+    member this.Trigger o = event.Trigger o
 
