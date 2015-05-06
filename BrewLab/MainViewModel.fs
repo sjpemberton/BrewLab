@@ -17,7 +17,8 @@ type MainViewModel() as this =
                    MashLength = 60.0<minute>
                    Volume = 21.0<L>
                    Style = ""
-                   EstimatedOriginalGravity = 0.0<sg> }
+                   EstimatedOriginalGravity = 1.0<sg> 
+                   Bitterness = 0.0<IBU>}
 
     member x.Recipe 
         with get() = new RecipeViewModel(recipe)

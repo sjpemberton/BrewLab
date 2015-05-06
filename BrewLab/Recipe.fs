@@ -17,7 +17,8 @@ module Recipe =
           MashLength : float<minute>
           Volume : float<'v>
           Style : string 
-          EstimatedOriginalGravity: float<sg>}
+          EstimatedOriginalGravity: float<sg>
+          Bitterness:float<IBU>}
     
     type Recipe = 
         | Metric of _recipe<kg, L, degC>
@@ -26,19 +27,14 @@ module Recipe =
     let UpdateGrain recipe grain = 
         { recipe with Grain = grain}
 
+    let CalculateGravity volume efficiency grain =
+        grain 
+        |> List.fold (fun acc g -> acc + EstimateGravityPoints volume g.Weight g.Grain.Potential efficiency) 0.0<gp>
+        |> ToGravity
+
     let EstimateOriginalGravity recipe = 
-        {recipe with EstimatedOriginalGravity = recipe.Grain 
-                            |> List.fold (fun acc g -> acc + EstimateGravity recipe.Volume g.Weight g.Grain.Potential recipe.Efficiency) 0.0<sg>} 
-    
-//    let EstimateOriginalGravity recipe = 
-//        match recipe with
-//        | Metric mr -> 
-//            {mr with EstimatedOriginalGravity = mr.Grain 
-//                            |> List.fold (fun acc g -> acc + EstimateGravity mr.Volume g.Weight g.Potential mr.Efficiency) 0.0<sg>}
-//        | Imperial ir -> 
-//            {ir with EstimatedOriginalGravity = ir.Grain 
-//                    |> List.fold (fun acc g -> acc + EstimateGravity (ir.Volume |> ToLitres) (g.Weight |> ToKilograms) (g.Potential |> ToPGPKg) ir.Efficiency) 0.0<sg>}
-    
+        {recipe with EstimatedOriginalGravity = recipe.Grain |> CalculateGravity recipe.Volume recipe.Efficiency}
+
     let AddGrain recipe grain = 
         grain :: recipe.Grain
         |> UpdateGrain recipe

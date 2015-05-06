@@ -11,11 +11,11 @@ type LabViewModel<'t>(model : 't, eType: LabEvent) as this =
     let mutable model = model
     let mutable eventHandles = List.empty
     let propagateChanges e = 
-        //this.UpdateModelSnapshot()
+        this.UpdateModelSnapshot()
         RecipeEvent.Instance.Trigger(e)
 
-    //Map the prop change notification to a recipe change evnt and inform everybody - Warning - implementing properties that start as initially in valid will fire multiple events
-    do this.BindEvent((this :> INotifyPropertyChanged).PropertyChanged |> Observable.map (fun e -> {eventType = eType; data = this}) , (fun o -> o :> IObservable<_>), propagateChanges)
+    //Map the prop change notification to a recipe change event and inform everybody - Warning - implementing properties that start as initially in valid will fire multiple events
+    do this.BindEvent((this :> INotifyPropertyChanged).PropertyChanged |> Observable.map (fun e -> eType), (fun o -> o), propagateChanges)
 
     interface IDisposable with
         member x.Dispose() = eventHandles |> List.iter (fun d -> d.Dispose())

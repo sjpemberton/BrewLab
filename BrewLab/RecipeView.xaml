@@ -6,7 +6,7 @@
     xmlns:converters="clr-namespace:Converters;assembly=BrewLab"   
     xmlns:viewModels="clr-namespace:ViewModels;assembly=BrewLab"
     xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
-    MinHeight="220" MinWidth="300" Height="Auto"
+    MinHeight="300" MinWidth="600" Height="Auto"
     fsxaml:ViewController.Custom="{x:Type local:RecipeViewController}">
 
     <UserControl.Resources>
@@ -46,7 +46,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTextColumn IsReadOnly="True" Binding="{Binding Grain.Potential}" Header="Potential" Width="*"/>
+                        <DataGridTextColumn IsReadOnly="True" Binding="{Binding Grain.Potential, StringFormat=N2}" Header="Potential" Width="*"/>
                         <DataGridTextColumn IsReadOnly="True" Binding="{Binding Grain.Colour}" Header="Colour (EBC)" Width="*"/>
                         <DataGridTextColumn Binding="{Binding Weight, Mode=TwoWay}" Header="Weight" Width="*"/>
                         <DataGridTemplateColumn>
@@ -71,6 +71,7 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Button Name="AddGrain" FontSize="14" Command="{Binding AddMaltCommand}">Add Fermentable</Button>
+                    <TextBlock FontSize="14" Grid.Column="1" Text="{Binding Gravity, StringFormat=N3}"/>
                 </Grid>
             </Grid>
             <Grid Grid.Column="1">
@@ -111,7 +112,7 @@
                         </DataGridTemplateColumn>
                         <DataGridTextColumn Binding="{Binding Weight, Mode=TwoWay}" Header="Weight" Width="*"/>
                         <DataGridTextColumn Binding="{Binding Time, Mode=TwoWay}" Header="Time" Width="*"/>
-                        <DataGridTextColumn IsReadOnly="True" Binding="{Binding IBU}" Header="IBU" Width="*"/>
+                        <DataGridTextColumn IsReadOnly="True" Binding="{Binding IBU, StringFormat=N2}" Header="IBU" Width="*"/>
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>

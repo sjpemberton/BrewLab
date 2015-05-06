@@ -72,7 +72,7 @@
   <ItemGroup>
     <Reference Include="Accessibility" />
     <Reference Include="BrewCalculations">
-      <HintPath>..\packages\BrewCalculations\BrewCalculations.dll</HintPath>
+      <HintPath>..\packages\BrewCalc\BrewCalculations.dll</HintPath>
     </Reference>
     <Reference Include="FSharp.ViewModule.Core.Wpf">
       <HintPath>..\..\packages\FSharp.ViewModule.Core.0.9.9.1\lib\net45\FSharp.ViewModule.Core.Wpf.dll</HintPath>
