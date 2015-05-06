@@ -12,7 +12,7 @@ open System.ComponentModel
 open System
 
 type RecipeViewModel(recipe) as this = 
-    inherit LabViewModel<_recipe<kg, L, degC>>(recipe, Events.LabEvent.RecipeChange)
+    inherit LabViewModel<_recipe<kg, L, degC>>(recipe, Events.LabEvent.GravityChange)
     let grain = ObservableCollection<GrainViewModel>()
     let hopAdditions = ObservableCollection<HopViewModel>()
     let handleRefresh event = this.RefreshParts 

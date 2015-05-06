@@ -13,7 +13,7 @@ module IngredientViewModels =
 
     let subscribe source = 
             source
-            |> Observable.filter (function Events.UnitsChanged -> true | _ -> false)
+            |> Observable.filter (function {Events.LabEventArg.eventType = Events.LabEvent.UnitsChanged} -> true | _ -> false)
 
     let OnLabEvent e =  ()
 
