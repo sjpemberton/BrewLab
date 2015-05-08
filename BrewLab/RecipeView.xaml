@@ -1,0 +1,142 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:fsxaml="clr-namespace:FsXaml;assembly=FsXaml.Wpf"
+    xmlns:local="clr-namespace:Views;assembly=BrewLab"   
+    xmlns:converters="clr-namespace:Converters;assembly=BrewLab"   
+    xmlns:viewModels="clr-namespace:ViewModels;assembly=BrewLab"
+    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
+    MinHeight="300" MinWidth="600" Height="Auto"
+    fsxaml:ViewController.Custom="{x:Type local:RecipeViewController}">
+
+    <UserControl.Resources>
+        <converters:DiscriminatedUnionText x:Key="DUConverter"/>
+    </UserControl.Resources>
+
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBox Name="RecipeName" Text="Enter Recipe Name Here..." Grid.Row="0"  FontSize="16"/>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="32" />
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="32" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="Fermentables" Grid.Row="0"  FontSize="14"/>
+                <DataGrid Name="GrainBill" Grid.Row="1" Margin="3" ItemsSource="{Binding Grain}" AutoGenerateColumns="false">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Name" Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ComboBox Grid.Row="2" FontSize="16" Text="Add Grain" ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:RecipeView}, Path=DataContext.Grains, Mode=OneWay}" SelectedItem="{Binding Grain, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Name="GrainDropDown">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Name}" Width="{Binding ElementName=GrainDropDown, Path=ActualWidth}" />
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn IsReadOnly="True" Binding="{Binding Grain.Potential, StringFormat=N2}" Header="Potential" Width="*"/>
+                        <DataGridTextColumn IsReadOnly="True" Binding="{Binding Grain.Colour}" Header="Colour (EBC)" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding Weight, Mode=TwoWay}" Header="Weight" Width="*"/>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Name="RemoveGrainButton"  Width="28" Height="28" HorizontalAlignment="Center" VerticalAlignment="Center" Background="OrangeRed" 
+                                            CommandParameter="{Binding}"
+                                            Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:RecipeView}, Path=DataContext.RemoveMaltCommand}" Visibility="Hidden" Content="X" ></Button>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource AncestorType=DataGridRow}}" Value="True">
+                                            <Setter Property="Visibility" TargetName="RemoveGrainButton" Value="Visible"/>
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Name="AddGrain" FontSize="14" Command="{Binding AddMaltCommand}">Add Fermentable</Button>
+                    <TextBlock FontSize="14" Grid.Column="1" Text="{Binding Gravity, StringFormat=N3}"/>
+                </Grid>
+            </Grid>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="32" />
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="32" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="Hop Additions" Grid.Row="0"  FontSize="14"/>
+                <DataGrid Name="HopAdditions" Grid.Row="1" Margin="3"  ItemsSource="{Binding HopAdditions}" AutoGenerateColumns="false">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Name" Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ComboBox Grid.Row="2" FontSize="16" Text="Select Hop" ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:RecipeView}, Path=DataContext.Hops, Mode=OneWay}" SelectedItem="{Binding Hop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Name="HopDropDown">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Name}" Width="{Binding ElementName=HopDropDown, Path=ActualWidth}" />
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn IsReadOnly="True" Binding="{Binding Hop.Alpha}" Header="Alpha (%)" Width="*"/>
+                        <DataGridTemplateColumn Header="Type" Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ComboBox Grid.Row="2" FontSize="16" Text="Select Hop Type" ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:RecipeView}, Path=DataContext.HopTypes, Mode=OneWay}" SelectedItem="{Binding Type, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Name="HopTypeDropDown">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Converter={StaticResource DUConverter}}" Width="{Binding ElementName=HopTypeDropDown, Path=ActualWidth}" />
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Binding="{Binding Weight, Mode=TwoWay}" Header="Weight" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding Time, Mode=TwoWay}" Header="Time" Width="*"/>
+                        <DataGridTextColumn IsReadOnly="True" Binding="{Binding IBU, StringFormat=N2}" Header="IBU" Width="*"/>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Name="RemoveHopButton"  Width="28" Height="28" HorizontalAlignment="Center" VerticalAlignment="Center" Background="OrangeRed" 
+                                            CommandParameter="{Binding}"
+                                            Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:RecipeView}, Path=DataContext.RemoveHopCommand}" Visibility="Hidden" Content="X" ></Button>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource AncestorType=DataGridRow}}" Value="True">
+                                            <Setter Property="Visibility" TargetName="RemoveHopButton" Value="Visible"/>
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Name="AddHop" FontSize="14" Command="{Binding AddHopCommand}">Add Hop</Button>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

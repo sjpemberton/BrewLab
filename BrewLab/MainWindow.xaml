@@ -1,0 +1,11 @@
+﻿<Window
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:Views;assembly=BrewLab"
+    xmlns:fsxaml="http://github.com/fsprojects/FsXaml"  
+    Title="Brewers Lab" Height="600" Width="800">
+    
+    <Grid Name="MainGrid">
+        <local:MainView/>
+    </Grid>
+</Window>
