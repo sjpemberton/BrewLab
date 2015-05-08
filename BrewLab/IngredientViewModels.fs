@@ -23,14 +23,11 @@ module IngredientViewModels =
         let weight = this.Factory.Backing(<@ this.Weight @>, 0.001<kg>, greaterThan (fun a -> 0.000<kg>))
         let grain = this.Factory.Backing(<@ this.Grain @>, addition.Grain)
 
-        let GetCurrent = {Grain = grain.Value; Weight = weight.Value }
-
         do base.BindEvent(Events.RecipeEvent.Instance.Event, subscribe, OnLabEvent)
 
-        override x.UpdateModel(model) = 
-            { model with Grain = grain.Value; Weight = weight.Value }
+        override x.GetUpdatedModel() = 
+            { Grain = grain.Value; Weight = weight.Value }
 
-        member x.GetCurrentModel() = GetCurrent
         member x.Grain with get() = grain.Value and set(v) = grain.Value <- v
         member x.Weight with get () = weight.Value and set (value) = weight.Value <- value
    
@@ -47,12 +44,10 @@ module IngredientViewModels =
         let time = this.Factory.Backing(<@ this.Time @>, 0.1<minute>, greaterThan (fun a -> 0.000<minute>))
         let ibu = this.Factory.Backing(<@ this.IBU @>, 0.0<IBU>)
 
-        let GetCurrent = {Hop = hop.Value; Weight = weight.Value; Time = time.Value; Type=``type``.Value }
-
         do base.BindEvent(Events.RecipeEvent.Instance.Event, subscribe, OnLabEvent)
 
-        override x.UpdateModel(model) = 
-            let updated = { model with Hop = hop.Value; Weight = weight.Value; Time = time.Value; Type=``type``.Value }
+        override x.GetUpdatedModel() = 
+            let updated = { Hop = hop.Value; Weight = weight.Value; Time = time.Value; Type=``type``.Value }
             this.IBU <- CalculateIBUs updated recipeGravity recipeVolume
             updated
 
@@ -66,6 +61,6 @@ module IngredientViewModels =
         member x.UpdateRecipeDetails(og, vol) =
             recipeGravity <- og
             recipeVolume <- volume
-            this.IBU <- CalculateIBUs GetCurrent og vol
+            this.IBU <- CalculateIBUs (this.GetUpdatedModel()) og vol
             //this.IBU
        

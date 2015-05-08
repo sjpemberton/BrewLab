@@ -13,13 +13,13 @@ open System
 
 type RecipeViewModel(recipe) as this = 
     inherit LabViewModel<_recipe<kg, L, degC>>(recipe, Events.LabEvent.GravityChange)
+
     let ibu = this.Factory.Backing(<@ this.Bitterness @>, recipe.Bitterness)
     let volume = this.Factory.Backing(<@ this.Volume @>, recipe.Volume)
     let efficiency = this.Factory.Backing(<@ this.Efficiency @>, recipe.Efficiency)
     let estimatedGravity = this.Factory.Backing(<@ this.Gravity @>, recipe.EstimatedOriginalGravity)
     let grain = ObservableCollection<GrainViewModel>()
     let hopAdditions = ObservableCollection<HopViewModel>()
-    //let handleRefresh event = this.RefreshParts
     
     let addIngredient = 
         function 
@@ -33,7 +33,7 @@ type RecipeViewModel(recipe) as this =
 
     let handleIngredientUpdate = function
         Events.FermentableChange -> this.Gravity <- grain
-                                                    |> Seq.map (fun g -> g.GetModel())
+                                                    |> Seq.map (fun g -> g.GetUpdatedModel())
                                                     |> Seq.toList
                                                     |> CalculateGravity this.Volume this.Efficiency
                                     hopAdditions |> Seq.iter (fun h -> h.UpdateRecipeDetails(this.Gravity, this.Volume))
@@ -42,25 +42,21 @@ type RecipeViewModel(recipe) as this =
 
     let addMaltCommand = 
         this.Factory.CommandSync(fun p -> 
-            addIngredient <| Grain { Grain = this.Grains.[0]; Weight = 0.0<kg> }
-            this.RefreshParts)
+            addIngredient <| Grain { Grain = this.Grains.[0]; Weight = 0.0<kg> })
 
     let removeMaltCommand = 
         this.Factory.CommandSyncParam(fun grainVm -> 
             this.Grain.Remove(grainVm) |> ignore
-            this.RefreshParts
             handleIngredientUpdate Events.FermentableChange
             (grainVm :> IDisposable).Dispose())
     
     let addHopCommand = 
         this.Factory.CommandSync(fun p -> 
-            addIngredient <| Hop { Hop = this.Hops.[0]; Weight = 0.0<g>; Time = 0.0<minute>; Type = HopType.Leaf }
-            this.RefreshParts)
+            addIngredient <| Hop { Hop = this.Hops.[0]; Weight = 0.0<g>; Time = 0.0<minute>; Type = HopType.Leaf })
 
     let removeHopCommand = 
         this.Factory.CommandSyncParam(fun hopVm -> 
             this.HopAdditions.Remove(hopVm) |> ignore
-            this.RefreshParts
             handleIngredientUpdate Events.HopChange
             (hopVm :> IDisposable).Dispose())
     
@@ -87,11 +83,9 @@ type RecipeViewModel(recipe) as this =
     member x.RemoveMaltCommand = removeMaltCommand
     member x.RemoveHopCommand = removeHopCommand
 
-    member private x.RefreshParts = this.UpdateModelSnapshot()
-
-    override x.UpdateModel recipe = 
+    override x.GetUpdatedModel() = 
         grain
-        |> Seq.map (fun g -> g.GetModel())
+        |> Seq.map (fun g -> g.GetUpdatedModel())
         |> Seq.toList
         |> UpdateGrain recipe
         |> EstimateOriginalGravity
