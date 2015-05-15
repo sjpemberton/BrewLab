@@ -48,19 +48,19 @@ module IngredientViewModels =
 
         override x.GetUpdatedModel() = 
             let updated = { Hop = hop.Value; Weight = weight.Value; Time = time.Value; Type=``type``.Value }
-            this.IBU <- CalculateIBUs updated recipeGravity recipeVolume
+            ibu.Value <- CalculateIBUs updated recipeGravity recipeVolume
             updated
 
         member x.Hop with get() = hop.Value and set(v) = hop.Value <- v
         member x.Time with get() = time.Value and set(v) = time.Value <- v 
         member x.Type with get() = ``type``.Value and set(v) = ``type``.Value <- v 
         member x.Weight with get () = weight.Value and set (value) = weight.Value <- value
-        member x.IBU with get () = ibu.Value and private set (value) = ibu.Value <- value
+        member x.IBU = ibu.Value
 
         //Recipe related details
         member x.UpdateRecipeDetails(og, vol) =
             recipeGravity <- og
             recipeVolume <- volume
-            this.IBU <- CalculateIBUs (this.GetUpdatedModel()) og vol
+            ibu.Value <- CalculateIBUs (this.GetUpdatedModel()) og vol
             //this.IBU
        

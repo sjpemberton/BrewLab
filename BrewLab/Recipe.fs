@@ -5,10 +5,11 @@ open Calculations
 open Conversions
 open Microsoft.FSharp.Data.UnitSystems.SI.UnitSymbols
 
+[<AutoOpen>]
 module Recipe = 
     type _recipe<[<Measure>] 'w, [<Measure>] 'v, [<Measure>] 't> = 
         { Name : string
-          Grain : GrainAddition<'w> list
+          Fermentables : Fermentable<'w> list
           Hops : hop<'w> list
           Adjuncts : adjunct<'w> list
           Yeast : yeast<'t> option
@@ -18,24 +19,44 @@ module Recipe =
           Volume : float<'v>
           Style : string 
           EstimatedOriginalGravity: float<sg>
-          Bitterness:float<IBU>}
+          Bitterness:float<IBU>
+          Colour:float<EBC>}
     
     type Recipe = 
         | Metric of _recipe<kg, L, degC>
         | Imperial of _recipe<lb, usGal, degF>
     
-    let UpdateGrain recipe grain = 
-        { recipe with Grain = grain}
 
-    let CalculateGravity volume efficiency grain =
-        grain 
-        |> List.fold (fun acc g -> acc + EstimateGravityPoints volume g.Weight g.Grain.Potential efficiency) 0.0<gp>
+    let CalculateGrainColour (grain:GrainAddition<_>) =
+        GrainEBC grain.Weight grain.Grain.Colour
+
+    let CalculateIBUs hopAddition sg vol =
+        let utilisation = EstimateHopUtilisation sg (float hopAddition.Time)
+        EstimateIBUs utilisation hopAddition.Hop.Alpha hopAddition.Weight vol
+
+    let CalculateGravity volume efficiency fermentables =
+        fermentables
+        |> List.map (function Grain g -> g.Grain.Potential, g.Weight
+                                | Adjunct a -> a.Adjunct.Potential, a.Weight)
+        |> List.fold (fun acc f -> acc + EstimateGravityPoints (fst f) (snd f) volume efficiency) 0.0<gp>
         |> ToGravity
 
     let EstimateOriginalGravity recipe = 
-        {recipe with EstimatedOriginalGravity = recipe.Grain |> CalculateGravity recipe.Volume recipe.Efficiency}
+        {recipe with EstimatedOriginalGravity = 
+                        recipe.Fermentables
+                        |> CalculateGravity recipe.Volume recipe.Efficiency}
 
-    let AddGrain recipe grain = 
-        grain :: recipe.Grain
-        |> UpdateGrain recipe
+    let CalculateColour recipe =
+        recipe.Fermentables 
+        |> List.choose (function Grain g -> Some g | _ -> None)
+        |> List.map CalculateGrainColour
+        |> TotalEBC recipe.Efficiency recipe.Volume
+
+
+    let UpdateFermentables recipe fermentables = 
+        { recipe with Fermentables = fermentables}
+
+    let AddFermentable recipe fermentable = 
+        fermentable :: recipe.Fermentables
+        |> UpdateFermentables recipe
         |> EstimateOriginalGravity

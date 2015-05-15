@@ -14,6 +14,7 @@ open System
 type RecipeViewModel(recipe) as this = 
     inherit LabViewModel<_recipe<kg, L, degC>>(recipe, Events.LabEvent.GravityChange)
 
+    let colour = this.Factory.Backing(<@ this.Colour @>, recipe.Colour)
     let ibu = this.Factory.Backing(<@ this.Bitterness @>, recipe.Bitterness)
     let volume = this.Factory.Backing(<@ this.Volume @>, recipe.Volume)
     let efficiency = this.Factory.Backing(<@ this.Efficiency @>, recipe.Efficiency)
@@ -24,7 +25,7 @@ type RecipeViewModel(recipe) as this =
     let addIngredient = 
         function 
         | Hop h -> this.HopAdditions.Add(new HopViewModel(h, estimatedGravity.Value, volume.Value))
-        | Grain g -> this.Grain.Add(new GrainViewModel(g))
+        | Fermentable (Grain g) -> this.Grain.Add(new GrainViewModel(g))
         | _ -> () //TODO - handle adjuncts
     
     let sumIBUs =
@@ -32,17 +33,19 @@ type RecipeViewModel(recipe) as this =
         |> Seq.sumBy (fun h -> h.IBU)
 
     let handleIngredientUpdate = function
-        Events.FermentableChange -> this.Gravity <- grain
-                                                    |> Seq.map (fun g -> g.GetUpdatedModel())
-                                                    |> Seq.toList
-                                                    |> CalculateGravity this.Volume this.Efficiency
-                                    hopAdditions |> Seq.iter (fun h -> h.UpdateRecipeDetails(this.Gravity, this.Volume))
-        | Events.HopChange -> this.Bitterness <- sumIBUs
+        Events.FermentableChange -> 
+            this.Gravity <- grain
+                            |> Seq.map (fun g -> Grain <| g.GetUpdatedModel())
+                            |> Seq.toList
+                            |> CalculateGravity this.Volume this.Efficiency
+            hopAdditions |> Seq.iter (fun h -> h.UpdateRecipeDetails(this.Gravity, this.Volume))
+        | Events.HopChange -> 
+            ibu.Value <- sumIBUs
         | _ -> ()
 
     let addMaltCommand = 
         this.Factory.CommandSync(fun p -> 
-            addIngredient <| Grain { Grain = this.Grains.[0]; Weight = 0.0<kg> })
+            addIngredient <| Fermentable (Grain { Grain = this.Grains.[0]; Weight = 0.0<kg> }))
 
     let removeMaltCommand = 
         this.Factory.CommandSyncParam(fun grainVm -> 
@@ -71,8 +74,9 @@ type RecipeViewModel(recipe) as this =
     
     member x.Gravity with get () = estimatedGravity.Value and set (v) = estimatedGravity.Value <- v
     member x.Volume with get () = volume.Value and set (v) = volume.Value <- v
-    member x.Bitterness with get () = ibu.Value and set (v) = ibu.Value <- v
+    member x.Bitterness = ibu.Value
     member x.Efficiency with get () = efficiency.Value and set (v) = efficiency.Value <- v
+    member x.Colour = colour.Value
 
     member x.Grains : grain<kg> list = DataService.grains 
     member x.Hops : hop<g> list = DataService.hops
@@ -85,7 +89,7 @@ type RecipeViewModel(recipe) as this =
 
     override x.GetUpdatedModel() = 
         grain
-        |> Seq.map (fun g -> g.GetUpdatedModel())
+        |> Seq.map (fun g -> Grain <| g.GetUpdatedModel())
         |> Seq.toList
-        |> UpdateGrain recipe
+        |> UpdateFermentables recipe
         |> EstimateOriginalGravity

@@ -8,7 +8,7 @@ type MainViewModel() as this =
     inherit ViewModelBase()
 
     let recipe = { Name = ""
-                   Grain = List.Empty
+                   Fermentables = List.Empty
                    Hops = List.Empty
                    Adjuncts = List.Empty
                    Yeast = None
@@ -18,7 +18,8 @@ type MainViewModel() as this =
                    Volume = 21.0<L>
                    Style = ""
                    EstimatedOriginalGravity = 1.0<sg> 
-                   Bitterness = 0.0<IBU>}
+                   Bitterness = 0.0<IBU>
+                   Colour = 0.0<EBC>}
 
     member x.Recipe 
         with get() = new RecipeViewModel(recipe)
