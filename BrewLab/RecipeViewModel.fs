@@ -24,8 +24,8 @@ type RecipeViewModel(recipe) as this =
     
     let addIngredient = 
         function 
-        | Hop h -> this.HopAdditions.Add(new HopViewModel(h, estimatedGravity.Value, volume.Value))
-        | Fermentable (Grain g) -> this.Grain.Add(new GrainViewModel(g))
+        | HopAddition h -> this.HopAdditions.Add(new HopViewModel(h, estimatedGravity.Value, volume.Value))
+        | FermentableAddition f -> this.Grain.Add(new GrainViewModel(f))
         | _ -> () //TODO - handle adjuncts
     
     let sumIBUs =
@@ -35,7 +35,7 @@ type RecipeViewModel(recipe) as this =
     let handleIngredientUpdate = function
         Events.FermentableChange -> 
             this.Gravity <- grain
-                            |> Seq.map (fun g -> Grain <| g.GetUpdatedModel())
+                            |> Seq.map (fun g -> g.GetUpdatedModel())
                             |> Seq.toList
                             |> CalculateGravity this.Volume this.Efficiency
             hopAdditions |> Seq.iter (fun h -> h.UpdateRecipeDetails(this.Gravity, this.Volume))
@@ -45,7 +45,7 @@ type RecipeViewModel(recipe) as this =
 
     let addMaltCommand = 
         this.Factory.CommandSync(fun p -> 
-            addIngredient <| Fermentable (Grain { Grain = this.Grains.[0]; Weight = 0.0<kg> }))
+            addIngredient <| FermentableAddition (this.Grains.[0], Weight 0.0<g> ))
 
     let removeMaltCommand = 
         this.Factory.CommandSyncParam(fun grainVm -> 
@@ -55,7 +55,7 @@ type RecipeViewModel(recipe) as this =
     
     let addHopCommand = 
         this.Factory.CommandSync(fun p -> 
-            addIngredient <| Hop { Hop = this.Hops.[0]; Weight = 0.0<g>; Time = 0.0<minute>; Type = HopType.Leaf })
+            addIngredient <| HopAddition {Hop = this.Hops.[0]; Weight = Weight 0.0<g>; Time = Time 0.0<minute>; Type = HopType.Leaf })
 
     let removeHopCommand = 
         this.Factory.CommandSyncParam(fun hopVm -> 
@@ -78,8 +78,8 @@ type RecipeViewModel(recipe) as this =
     member x.Efficiency with get () = efficiency.Value and set (v) = efficiency.Value <- v
     member x.Colour = colour.Value
 
-    member x.Grains : grain<kg> list = DataService.grains 
-    member x.Hops : hop<g> list = DataService.hops
+    member x.Grains : Fermentable list = DataService.grains
+    member x.Hops : Hop list = DataService.hops
     member x.HopTypes = DataService.hopTypes
 
     member x.AddMaltCommand = addMaltCommand
@@ -87,9 +87,9 @@ type RecipeViewModel(recipe) as this =
     member x.RemoveMaltCommand = removeMaltCommand
     member x.RemoveHopCommand = removeHopCommand
 
-    override x.GetUpdatedModel() = 
-        grain
-        |> Seq.map (fun g -> Grain <| g.GetUpdatedModel())
-        |> Seq.toList
-        |> UpdateFermentables recipe
-        |> EstimateOriginalGravity
+    override x.GetUpdatedModel() = recipe
+        //grain
+        //|> Seq.map (fun g -> Grain <| g.GetUpdatedModel())
+        //|> Seq.toList
+        //|> UpdateFermentables recipe
+        //|> EstimateOriginalGravity

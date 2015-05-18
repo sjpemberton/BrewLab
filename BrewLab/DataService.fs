@@ -4,20 +4,18 @@ open Models
 open Units
 
 let grains = 
-    [ { Name = "Maris Otter"
-        Potential = 308.765<pgpkg>
-        Colour = 4.0<EBC> }
-      { Name = "Cara Amber"
-        Potential = 292.075<pgpkg>
-        Colour = 20.0<EBC> }
-      { Name = "Cara Pils"
-        Potential = 267.04<pgpkg>
-        Colour = 10.0<EBC> } ]
+    [ Grain ( Potential 308.765<pgpkg>,
+        4.0<EBC>,
+        "Maris Otter")
+      Grain ( Potential 292.075<pgpkg>,
+        20.0<EBC>, 
+        "Cara Amber")
+      Grain ( Potential 267.04<pgpkg>,
+        10.0<EBC>,
+        "Cara Pils")]
     
 let hops = 
-    [ { Name = "East Kent Goldings"
-        Alpha = 7.9<percentage> }
-      { Name = "Northen Brewer"
-        Alpha = 11.0<percentage> } ]
+    [ Hop (Alpha 7.9<percentage>, "East Kent Goldings")
+      Hop (Alpha  11.0<percentage>, "Northen Brewer") ]
     
 let hopTypes = [ Leaf; Pellet; Extract ]
