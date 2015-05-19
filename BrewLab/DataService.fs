@@ -4,13 +4,13 @@ open Models
 open Units
 
 let grains = 
-    [ Grain ( Potential 308.765<pgpkg>,
+    [ Grain ( 308.765<pgpkg>,
         4.0<EBC>,
         "Maris Otter")
-      Grain ( Potential 292.075<pgpkg>,
+      Grain ( 292.075<pgpkg>,
         20.0<EBC>, 
         "Cara Amber")
-      Grain ( Potential 267.04<pgpkg>,
+      Grain ( 267.04<pgpkg>,
         10.0<EBC>,
         "Cara Pils")]
     

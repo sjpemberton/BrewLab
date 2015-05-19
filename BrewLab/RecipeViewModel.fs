@@ -45,7 +45,7 @@ type RecipeViewModel(recipe) as this =
 
     let addMaltCommand = 
         this.Factory.CommandSync(fun p -> 
-            addIngredient <| FermentableAddition (this.Grains.[0], Weight 0.0<g> ))
+            addIngredient <| FermentableAddition {Fermentable = this.Grains.[0]; Weight = 0.0<g> })
 
     let removeMaltCommand = 
         this.Factory.CommandSyncParam(fun grainVm -> 
@@ -55,7 +55,7 @@ type RecipeViewModel(recipe) as this =
     
     let addHopCommand = 
         this.Factory.CommandSync(fun p -> 
-            addIngredient <| HopAddition {Hop = this.Hops.[0]; Weight = Weight 0.0<g>; Time = Time 0.0<minute>; Type = HopType.Leaf })
+            addIngredient <| HopAddition {Hop = this.Hops.[0]; Weight = 0.0<g>; Time = 0.0<minute>; Type = HopType.Leaf })
 
     let removeHopCommand = 
         this.Factory.CommandSyncParam(fun hopVm -> 

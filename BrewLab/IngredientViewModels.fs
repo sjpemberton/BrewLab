@@ -20,13 +20,13 @@ module IngredientViewModels =
     type GrainViewModel (addition) as this = 
         inherit LabViewModel<FermentableAddition>(addition, Events.LabEvent.FermentableChange)
 
-        let weight = this.Factory.Backing(<@ this.Weight @>, Weight 0.1<g>, greaterThan (fun a -> Weight 0.0<g>))
-        let grain = this.Factory.Backing(<@ this.Grain @>, fst addition)
+        let weight = this.Factory.Backing(<@ this.Weight @>, 0.1<g>, greaterThan (fun a -> 0.0<g>))
+        let grain = this.Factory.Backing(<@ this.Grain @>, addition.Fermentable)
 
         do base.BindEvent(Events.RecipeEvent.Instance.Event, subscribe, OnLabEvent)
 
         override x.GetUpdatedModel() = 
-            (grain.Value, weight.Value)
+            {Fermentable = grain.Value; Weight = weight.Value}
 
         member x.Grain with get() = grain.Value and set(v) = grain.Value <- v
         member x.Weight with get () = weight.Value and set (value) = weight.Value <- value
@@ -39,9 +39,9 @@ module IngredientViewModels =
         let mutable recipeVolume = volume
 
         let hop = this.Factory.Backing(<@ this.Hop @>, addition.Hop)
-        let weight = this.Factory.Backing(<@ this.Weight @>, Weight 0.1<g>, greaterThan (fun a -> Weight 0.0<g>))
+        let weight = this.Factory.Backing(<@ this.Weight @>, 0.1<g>, greaterThan (fun a -> 0.0<g>))
         let ``type`` = this.Factory.Backing(<@ this.Type @>, addition.Type)
-        let time = this.Factory.Backing(<@ this.Time @>, Time 0.1<minute>, greaterThan (fun a -> Time 0.0<minute>))
+        let time = this.Factory.Backing(<@ this.Time @>, 0.1<minute>, greaterThan (fun a -> 0.0<minute>))
         let ibu = this.Factory.Backing(<@ this.IBU @>, 0.0<IBU>)
 
         do base.BindEvent(Events.RecipeEvent.Instance.Event, subscribe, OnLabEvent)
