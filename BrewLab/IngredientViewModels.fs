@@ -17,18 +17,18 @@ module IngredientViewModels =
 
     let OnLabEvent e =  ()
 
-    type GrainViewModel (addition) as this = 
+    type FermentableViewModel (addition) as this = 
         inherit LabViewModel<FermentableAddition>(addition, Events.LabEvent.FermentableChange)
 
         let weight = this.Factory.Backing(<@ this.Weight @>, 0.1<g>, greaterThan (fun a -> 0.0<g>))
-        let grain = this.Factory.Backing(<@ this.Grain @>, addition.Fermentable)
+        let fermentable = this.Factory.Backing(<@ this.Fermentable @>, addition.Fermentable)
 
         do base.BindEvent(Events.RecipeEvent.Instance.Event, subscribe, OnLabEvent)
 
         override x.GetUpdatedModel() = 
-            {Fermentable = grain.Value; Weight = weight.Value}
+            {Fermentable = fermentable.Value; Weight = weight.Value}
 
-        member x.Grain with get() = grain.Value and set(v) = grain.Value <- v
+        member x.Fermentable with get() = fermentable.Value and set(v) = fermentable.Value <- v
         member x.Weight with get () = weight.Value and set (value) = weight.Value <- value
    
 

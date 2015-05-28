@@ -31,12 +31,12 @@
                     <RowDefinition Height="32" />
                 </Grid.RowDefinitions>
                 <TextBlock Text="Fermentables" Grid.Row="0"  FontSize="14"/>
-                <DataGrid Name="GrainBill" Grid.Row="1" Margin="3" ItemsSource="{Binding Grain}" AutoGenerateColumns="false">
+                <DataGrid Name="GrainBill" Grid.Row="1" Margin="3" ItemsSource="{Binding FermentableAdditions}" AutoGenerateColumns="false">
                     <DataGrid.Columns>
                         <DataGridTemplateColumn Header="Name" Width="*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <ComboBox Grid.Row="2" FontSize="16" Text="Add Grain" ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:RecipeView}, Path=DataContext.Grains, Mode=OneWay}" SelectedItem="{Binding Grain, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Name="GrainDropDown">
+                                    <ComboBox Grid.Row="2" FontSize="16" Text="Add Fermentable" ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:RecipeView}, Path=DataContext.Fermentables, Mode=OneWay}" SelectedItem="{Binding Fermentable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Name="GrainDropDown">
                                         <ComboBox.ItemTemplate>
                                             <DataTemplate>
                                                 <TextBlock Text="{Binding Name}" Width="{Binding ElementName=GrainDropDown, Path=ActualWidth}" />
@@ -46,8 +46,8 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTextColumn IsReadOnly="True" Binding="{Binding Grain.Potential, StringFormat=N2}" Header="Potential" Width="*"/>
-                        <DataGridTextColumn IsReadOnly="True" Binding="{Binding Grain.Colour}" Header="Colour (EBC)" Width="*"/>
+                        <DataGridTextColumn IsReadOnly="True" Binding="{Binding Fermentable.Potential, StringFormat=N2}" Header="Potential" Width="*"/>
+                        <DataGridTextColumn IsReadOnly="True" Binding="{Binding Fermentable.Colour}" Header="Colour (EBC)" Width="*"/>
                         <DataGridTextColumn Binding="{Binding Weight, Mode=TwoWay}" Header="Weight" Width="*"/>
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.CellTemplate>

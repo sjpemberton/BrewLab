@@ -3,7 +3,7 @@
 open Models
 open Units
 
-let grains = 
+let fermentables = 
     [ Grain ( 308.765<pgpkg>,
         4.0<EBC>,
         "Maris Otter")
@@ -12,7 +12,9 @@ let grains =
         "Cara Amber")
       Grain ( 267.04<pgpkg>,
         10.0<EBC>,
-        "Cara Pils")]
+        "Cara Pils")
+      Adjunct(10.0<pgpkg>,
+        "Orange Zest")]
     
 let hops = 
     [ Hop (Alpha 7.9<percentage>, "East Kent Goldings")

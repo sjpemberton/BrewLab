@@ -19,37 +19,37 @@ type RecipeViewModel(recipe) as this =
     let volume = this.Factory.Backing(<@ this.Volume @>, recipe.Volume)
     let efficiency = this.Factory.Backing(<@ this.Efficiency @>, recipe.Efficiency)
     let estimatedGravity = this.Factory.Backing(<@ this.Gravity @>, recipe.EstimatedOriginalGravity)
-    let grain = ObservableCollection<GrainViewModel>()
-    let hopAdditions = ObservableCollection<HopViewModel>()
+    let fermentables = ObservableCollection<FermentableViewModel>()
+    let hops = ObservableCollection<HopViewModel>()
     
     let addIngredient = 
         function 
-        | HopAddition h -> this.HopAdditions.Add(new HopViewModel(h, estimatedGravity.Value, volume.Value))
-        | FermentableAddition f -> this.Grain.Add(new GrainViewModel(f))
+        | HopAddition h -> hops.Add(new HopViewModel(h, estimatedGravity.Value, volume.Value))
+        | FermentableAddition f -> fermentables.Add(new FermentableViewModel(f))
         | _ -> () //TODO - handle adjuncts
     
     let sumIBUs =
-        hopAdditions
+        hops
         |> Seq.sumBy (fun h -> h.IBU)
 
     let handleIngredientUpdate = function
         Events.FermentableChange -> 
-            this.Gravity <- grain
-                            |> Seq.map (fun g -> g.GetUpdatedModel())
+            this.Gravity <- fermentables
+                            |> Seq.map (fun f -> f.GetUpdatedModel())
                             |> Seq.toList
                             |> CalculateGravity this.Volume this.Efficiency
-            hopAdditions |> Seq.iter (fun h -> h.UpdateRecipeDetails(this.Gravity, this.Volume))
+            hops |> Seq.iter (fun h -> h.UpdateRecipeDetails(this.Gravity, this.Volume))
         | Events.HopChange -> 
             ibu.Value <- sumIBUs
         | _ -> ()
 
     let addMaltCommand = 
         this.Factory.CommandSync(fun p -> 
-            addIngredient <| FermentableAddition {Fermentable = this.Grains.[0]; Weight = 0.0<g> })
+            addIngredient <| FermentableAddition {Fermentable = this.Fermentables.[0]; Weight = 0.0<g> })
 
     let removeMaltCommand = 
         this.Factory.CommandSyncParam(fun grainVm -> 
-            this.Grain.Remove(grainVm) |> ignore
+            fermentables.Remove(grainVm) |> ignore
             handleIngredientUpdate Events.FermentableChange
             (grainVm :> IDisposable).Dispose())
     
@@ -59,7 +59,7 @@ type RecipeViewModel(recipe) as this =
 
     let removeHopCommand = 
         this.Factory.CommandSyncParam(fun hopVm -> 
-            this.HopAdditions.Remove(hopVm) |> ignore
+            hops.Remove(hopVm) |> ignore
             handleIngredientUpdate Events.HopChange
             (hopVm :> IDisposable).Dispose())
     
@@ -69,8 +69,8 @@ type RecipeViewModel(recipe) as this =
                             | Events.FermentableChange | Events.HopChange -> true
                             | _ -> false)), handleIngredientUpdate)
     
-    member x.Grain : ObservableCollection<GrainViewModel> = grain
-    member x.HopAdditions : ObservableCollection<HopViewModel> = hopAdditions
+    member x.FermentableAdditions = fermentables
+    member x.HopAdditions = hops
     
     member x.Gravity with get () = estimatedGravity.Value and set (v) = estimatedGravity.Value <- v
     member x.Volume with get () = volume.Value and set (v) = volume.Value <- v
@@ -78,7 +78,7 @@ type RecipeViewModel(recipe) as this =
     member x.Efficiency with get () = efficiency.Value and set (v) = efficiency.Value <- v
     member x.Colour = colour.Value
 
-    member x.Grains : Fermentable list = DataService.grains
+    member x.Fermentables : Fermentable list = DataService.fermentables
     member x.Hops : Hop list = DataService.hops
     member x.HopTypes = DataService.hopTypes
 
