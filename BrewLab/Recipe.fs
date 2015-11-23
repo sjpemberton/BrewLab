@@ -27,9 +27,9 @@ module Recipe =
     let UpdateGrain recipe grain = 
         { recipe with Grain = grain}
 
-    let CalculateGravity volume efficiency grain =
+    let CalculateGravity volume efficiency (grain: GrainAddition<_> list) =
         grain 
-        |> List.fold (fun acc g -> acc + EstimateGravityPoints volume g.Weight g.Grain.Potential efficiency) 0.0<gp>
+        |> List.fold (fun acc g -> acc + EstimateGravityPoints g.Grain.Potential g.Weight volume efficiency) 0.0<gp>
         |> ToGravity
 
     let EstimateOriginalGravity recipe = 
