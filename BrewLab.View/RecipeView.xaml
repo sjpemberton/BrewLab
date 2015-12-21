@@ -96,7 +96,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTextColumn IsReadOnly="True" Binding="{Binding Hop.Alpha}" Header="Alpha (%)" Width="*"/>
+                        <DataGridTextColumn IsReadOnly="True" Binding="{Binding Hop.Alpha.Value}" Header="Alpha (%)" Width="*"/>
                         <DataGridTemplateColumn Header="Type" Width="*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>

@@ -29,7 +29,7 @@ module Ingredients =
     | Grain of Potential:float<gp/kg> * Colour:float<EBC> * Name:string
     | Adjunct of Potential:float<gp/kg> * Name:string
 
-    type Hop = Hop of Alpha * Name:string 
+    type Hop = Hop of Alpha:Alpha * Name:string 
     type Additive = Additive of Name:string
     
     type HopAddition = 
