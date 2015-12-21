@@ -51,6 +51,14 @@
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
+    <Compile Include="..\paket-files\sjpemberton\BrewCalc\BrewCalculations\BrewCalculations\Units.fs">
+      <Paket>True</Paket>
+      <Link>Units.fs</Link>
+    </Compile>
+    <Compile Include="..\paket-files\sjpemberton\BrewCalc\BrewCalculations\BrewCalculations\Calculations.fs">
+      <Paket>True</Paket>
+      <Link>Calculations.fs</Link>
+    </Compile>
     <Compile Include="EventService.fs" />
     <Compile Include="Ingredients.fs" />
     <Compile Include="Recipe.fs" />
@@ -62,9 +70,6 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Accessibility" />
-    <Reference Include="BrewCalculations">
-      <HintPath>..\packages\BrewCalculations\BrewCalculations.dll</HintPath>
-    </Reference>
     <Reference Include="FSharp.ViewModule.Core.Wpf">
       <HintPath>..\..\packages\FSharp.ViewModule.Core.0.9.9.1\lib\net45\FSharp.ViewModule.Core.Wpf.dll</HintPath>
       <Private>True</Private>

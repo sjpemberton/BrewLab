@@ -1,8 +1,13 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{78A0E7A1-0FB7-4293-BA83-F8D3A7C92177}"
+	ProjectSection(SolutionItems) = preProject
+		paket.dependencies = paket.dependencies
+	EndProjectSection
+EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "BrewLab", "BrewLab\BrewLab.fsproj", "{1EA951C7-A82E-468B-A6D4-DDEE892A9A96}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "BrewLab.View", "BrewLab.View\BrewLab.View.fsproj", "{2B353285-63B9-42F5-996A-C2A3AEC1D6BD}"

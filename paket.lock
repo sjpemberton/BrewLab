@@ -2,11 +2,13 @@ NUGET
   remote: https://nuget.org/api/v2
   specs:
     Expression.Blend.Sdk (1.0.2) - framework: >= net45
-    FAKE (3.25.2)
+    FAKE (3.36.0)
+    FSharp.ViewModule.Core (0.9.9.1)
     FsXaml.Wpf (0.9.9)
       Expression.Blend.Sdk (>= 1.0.2) - framework: >= net45
     NUnit (2.6.4)
 GITHUB
   remote: sjpemberton/BrewCalc
   specs:
-    FULLPROJECT (4c97871d1f6603b28d8d91fdc96548f172ddd415)
+    BrewCalculations/BrewCalculations/Calculations.fs (a52f04c373bac1d858d08ea8efae915f65094209)
+    BrewCalculations/BrewCalculations/Units.fs (a52f04c373bac1d858d08ea8efae915f65094209)

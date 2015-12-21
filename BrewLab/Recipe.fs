@@ -27,6 +27,7 @@ module Recipe =
         | Imperial of _recipe<lb, usGal, degF>
     
 
+<<<<<<< HEAD
     let CalculateGrainColour (grain:GrainAddition<_>) =
         GrainEBC grain.Weight grain.Grain.Colour
 
@@ -39,6 +40,11 @@ module Recipe =
         |> List.map (function Grain g -> g.Grain.Potential, g.Weight
                                 | Adjunct a -> a.Adjunct.Potential, a.Weight)
         |> List.fold (fun acc f -> acc + EstimateGravityPoints (fst f) (snd f) volume efficiency) 0.0<gp>
+=======
+    let CalculateGravity volume efficiency (grain: GrainAddition<_> list) =
+        grain 
+        |> List.fold (fun acc g -> acc + EstimateGravityPoints g.Grain.Potential g.Weight volume efficiency) 0.0<gp>
+>>>>>>> d8d14dffc086ee465b21cdcae66a4035dc94ba51
         |> ToGravity
 
     let EstimateOriginalGravity recipe = 

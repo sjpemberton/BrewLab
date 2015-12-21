@@ -1,6 +1,11 @@
 source https://nuget.org/api/v2
 
 // NuGet packages
+nuget FSharp.ViewModule.Core 0.9.9.1
 nuget NUnit ~> 2.6.3
 nuget FAKE ~> 3.4
 nuget FsXaml.Wpf ~> 0.9.9
+
+//GitHub
+github sjpemberton/BrewCalc BrewCalculations/BrewCalculations/Calculations.fs
+github sjpemberton/BrewCalc BrewCalculations/BrewCalculations/Units.fs
