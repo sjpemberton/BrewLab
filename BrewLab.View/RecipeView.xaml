@@ -17,6 +17,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="32"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <TextBox Name="RecipeName" Text="Enter Recipe Name Here..." Grid.Row="0"  FontSize="16"/>
         <Grid Grid.Row="1">
@@ -48,7 +49,7 @@
                         </DataGridTemplateColumn>
                         <DataGridTextColumn IsReadOnly="True" Binding="{Binding Fermentable.Potential, StringFormat=N2}" Header="Potential" Width="*"/>
                         <DataGridTextColumn IsReadOnly="True" Binding="{Binding Fermentable.Colour}" Header="Colour (EBC)" Width="*"/>
-                        <DataGridTextColumn Binding="{Binding Weight, Mode=TwoWay}" Header="Weight" Width="*"/>
+                        <DataGridTextColumn Binding="{Binding Weight, Mode=TwoWay}" Header="Weight (grams)" Width="*"/>
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -71,7 +72,7 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Button Name="AddGrain" FontSize="14" Command="{Binding AddMaltCommand}">Add Fermentable</Button>
-                    <TextBlock FontSize="14" Grid.Column="1" Text="{Binding Gravity, StringFormat=N3}"/>
+
                 </Grid>
             </Grid>
             <Grid Grid.Column="1">
@@ -137,6 +138,22 @@
                     <Button Name="AddHop" FontSize="14" Command="{Binding AddHopCommand}">Add Hop</Button>
                 </Grid>
             </Grid>
+        </Grid>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="32" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBlock  Grid.Row="0" Grid.ColumnSpan="2" FontSize="14">Current Brew Details</TextBlock>
+            <Label Grid.Row="1" Grid.Column="0">Gravity:</Label>
+            <TextBlock Grid.Row="1" Grid.Column="1" FontSize="14" Text="{Binding Gravity, StringFormat=N3}"/>
+            <Label Grid.Row="2" Grid.Column="0">Bitterness (IBU):</Label>
+            <TextBlock Grid.Row="2" Grid.Column="1" FontSize="14" Text="{Binding Bitterness, StringFormat=N3}"/>
         </Grid>
     </Grid>
 </UserControl>

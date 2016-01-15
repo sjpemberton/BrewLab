@@ -25,7 +25,7 @@ module Recipe =
         | Imperial of _recipe<lb, usGal, degF>
     
     //Temporary conversion - Allign measures instead
-    let gramsToKilos (g : float<g>) = float g * 1000.0 * 1.0<kg>
+    let gramsToKilos (g : float<g>) = float g / 1000.0 * 1.0<kg>
     
     let CalculateGrainColour fermentableAddition = 
         match fermentableAddition.Fermentable with

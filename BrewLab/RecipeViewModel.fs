@@ -28,7 +28,7 @@ type RecipeViewModel(recipe) as this =
         | FermentableAddition f -> fermentables.Add(new FermentableViewModel(f))
         | _ -> () //TODO - handle adjuncts
     
-    let sumIBUs =
+    let sumIBUs () =
         hops
         |> Seq.sumBy (fun h -> h.IBU)
 
@@ -40,7 +40,7 @@ type RecipeViewModel(recipe) as this =
                             |> CalculateGravity this.Volume this.Efficiency
             hops |> Seq.iter (fun h -> h.UpdateRecipeDetails(this.Gravity, this.Volume))
         | Events.HopChange -> 
-            ibu.Value <- sumIBUs
+            ibu.Value <- sumIBUs ()
         | _ -> ()
 
     let addMaltCommand = 
